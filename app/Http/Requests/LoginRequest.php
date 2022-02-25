@@ -13,7 +13,7 @@ class LoginRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,17 @@ class LoginRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'lozinka' => ['required'],
+            'email' => ['required','email']
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'lozinka.required' => 'Lozinka je obavezno polje!',
+            'email.required' => 'Email je obavezno polje!',
+            'email.email' => 'Email mora imati formu emaila!'
         ];
     }
 }

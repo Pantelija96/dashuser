@@ -42,6 +42,8 @@ use Laravel\Sanctum\HasApiTokens;
  * @method static \Illuminate\Database\Eloquent\Builder|User whereRememberToken($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property string $prezime
+ * @method static \Illuminate\Database\Eloquent\Builder|User wherePrezime($value)
  */
 class User extends Authenticatable
 {
@@ -51,4 +53,8 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
     ];
+
+    public function getUloga(){
+        return $this->belongsTo( Uloga::class,'id_uloga');
+    }
 }

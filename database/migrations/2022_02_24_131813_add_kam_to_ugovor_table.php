@@ -14,7 +14,7 @@ class AddKamToUgovorTable extends Migration
     public function up()
     {
         Schema::table('ugovor', function (Blueprint $table) {
-            //
+            $table->string('kam')->default('');
         });
     }
 

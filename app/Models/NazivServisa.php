@@ -12,6 +12,16 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|NazivServisa newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|NazivServisa query()
  * @mixin \Eloquent
+ * @property int $id
+ * @property string $naziv
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property int $prikazi
+ * @method static \Illuminate\Database\Eloquent\Builder|NazivServisa whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|NazivServisa whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|NazivServisa whereNaziv($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|NazivServisa wherePrikazi($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|NazivServisa whereUpdatedAt($value)
  */
 class NazivServisa extends Model
 {

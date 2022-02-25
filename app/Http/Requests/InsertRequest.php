@@ -13,7 +13,7 @@ class InsertRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,14 @@ class InsertRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'naziv' => 'required'
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'naziv.required' => 'Polje naziv je obavezno!',
         ];
     }
 }

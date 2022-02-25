@@ -14,7 +14,7 @@ class RenamePrezimeInUsers extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            //
+            $table->renameColumn('preizime','prezime');
         });
     }
 
@@ -26,7 +26,7 @@ class RenamePrezimeInUsers extends Migration
     public function down()
     {
         Schema::table('users', function (Blueprint $table) {
-            //
+            $table->renameColumn('prezime','preizime');
         });
     }
 }
