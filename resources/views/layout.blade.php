@@ -95,7 +95,17 @@
 
                             @if(\Illuminate\Support\Facades\Auth::user()->getUloga->id == 1 || \Illuminate\Support\Facades\Auth::user()->getUloga->id == 2)
                                 <li class="navigation-header"><span>Administrator podrske</span> <i class="icon-menu" title="Main pages"></i></li>
-                                <li @yield('systemmanaging') ><a href="{{ url('/systemmanaging/1') }}"><i class="icon-database-add"></i> <span>Menadžment sistema</span></a></li>
+                                <li @yield('systemmanaging') >
+                                    <a href="#"><i class="icon-stack2"></i> <span>Menadzment sistema</span></a>
+                                    <ul>
+                                        <li @yield('stavkafakture')><a href="{{ url('/menage/stavkafakture') }}">Stavka fakture</a></li>
+                                        <li><a href="layout_navbar_sidebar_fixed.html">Fixed navbar &amp; sidebar</a></li>
+                                        <li><a href="layout_sidebar_fixed_native.html">Fixed sidebar native scroll</a></li>
+                                        <li><a href="layout_navbar_hideable.html">Hideable navbar</a></li>
+                                        <li><a href="layout_navbar_hideable_sidebar.html">Hideable &amp; fixed sidebar</a></li>
+                                        <li><a href="layout_footer_fixed.html">Fixed footer</a></li>
+                                    </ul>
+                                </li>
                                 @if(\Illuminate\Support\Facades\Auth::user()->getUloga->id == 1)
                                     <li class="navigation-header"><span>Administratorski meni</span> <i class="icon-menu" title="Main pages"></i></li>
                                     <li @yield('addNewUser') ><a href="{{ url('/addnewuser') }}"><i class="icon-user-plus"></i> <span>Dodaj novog korisnika portala</span></a></li>

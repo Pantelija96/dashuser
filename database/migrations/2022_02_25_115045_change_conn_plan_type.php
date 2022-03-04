@@ -14,7 +14,7 @@ class ChangeConnPlanType extends Migration
     public function up()
     {
         Schema::table('ugovor', function (Blueprint $table) {
-            //
+            $table->string('connectivity_plan')->change();
         });
     }
 

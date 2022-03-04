@@ -17,9 +17,6 @@ $(function() {
     $('.pickadate-format').pickadate({
         format: 'yyyy-mm-dd',
         formatSubmit: 'yyyy-mm-dd',
-        hiddenPrefix: 'prefix__',
-        hiddenSuffix: '__suffix',
-        select: [2021, 10, 2],
         max: [moment().year(), moment().month(), moment().date()]
     });
 })

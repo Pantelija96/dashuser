@@ -93,15 +93,15 @@
                                 <div class="form-group">
                                     <label for="name" class="col-lg-5 control-label text-right">Naziv ugovora:</label>
                                     <div class="col-lg-7">
-                                        <input type="text" id="nazivUgovora" name="nazivUgovora" class="form-control" placeholder="Naziv ugovora">
+                                        <input type="text" id="naziv_ugovora" name="naziv_ugovora" class="form-control" placeholder="Naziv ugovora">
                                     </div>
                                 </div>
 
                                 <div class="form-group">
                                     <label for="serviceName" class="col-lg-5 control-label text-right">Naziv servisa:</label>
                                     <div class="col-lg-7">
-                                        <select class="select" data-placeholder="Izaberi naziv servisa" name="nazivServisa" id="nazivServisa">
-                                            <option value="" selected disabled></option>
+                                        <select class="select" data-placeholder="Izaberi naziv servisa" name="naziv_servisa" id="naziv_servisa">
+                                            <option value="" selected></option>
                                             @if(isset($nazivi_servisa))
                                                 @foreach($nazivi_servisa as $ns)
                                                     <option value="{{ $ns->id }}">{{ $ns->naziv }}</option>
@@ -116,21 +116,21 @@
                                 <div class="form-group">
                                     <label for="number" class="col-lg-5 control-label text-right">Broj ugovora:</label>
                                     <div class="col-lg-7">
-                                        <input type="text" id="brojUgovora" name="brojUgovora" class="form-control" placeholder="Broj ugovora">
+                                        <input type="text" id="broj_ugovora" name="broj_ugovora" class="form-control" placeholder="Broj ugovora">
                                     </div>
                                 </div>
 
                                 <div class="form-group">
                                     <label for="nazivKorisnika" class="col-lg-5 control-label text-right">Naziv korisnika:</label>
                                     <div class="col-lg-7">
-                                        <input type="text" id="nazivKorisnika" name="nazivKorisnika" class="form-control" placeholder="Naziv korisnika">
+                                        <input type="text" id="naziv_kupac" name="naziv_kupac" class="form-control" placeholder="Naziv korisnika">
                                     </div>
                                 </div>
 
                                 <div class="form-group">
                                     <label for="connPlan" class="col-lg-5 control-label text-right">Connectivity plan:</label>
                                     <div class="col-lg-7">
-                                        <input type="text" id="connPlan" name="connPlan" class="form-control" placeholder="Connectivity plan">
+                                        <input type="text" id="connectivity_plan" name="connectivity_plan" class="form-control" placeholder="Connectivity plan">
                                     </div>
                                 </div>
 
@@ -141,8 +141,8 @@
                                 <div class="form-group">
                                     <label for="type" class="col-lg-5 control-label text-right">Tip ugovora:</label>
                                     <div class="col-lg-7">
-                                        <select class="select" data-placeholder="Izaberi tip ugovora" name="tipUgovora" id="tipUgovora">
-                                            <option value="" selected disabled></option>
+                                        <select class="select" data-placeholder="Izaberi tip ugovora" name="tip_ugovora" id="tip_ugovora">
+                                            <option value="" selected></option>
                                             @if(isset($tipovi_ugovora))
                                                 @foreach($tipovi_ugovora as $tu)
                                                     <option value="{{ $tu->id }}">{{ $tu->naziv }}</option>
@@ -158,7 +158,7 @@
                                     <label for="partner" class="col-lg-5 control-label text-right">Partner:</label>
                                     <div class="col-lg-7">
                                         <select class="select" data-placeholder="Izaberi partnera" name="partner" id="partner">
-                                            <option value="" selected disabled></option>
+                                            <option value="" selected></option>
                                             @if(isset($partneri))
                                                 @foreach($partneri as $p)
                                                     <option value="{{ $p->id }}">{{ $p->naziv }}</option>
@@ -174,14 +174,14 @@
                                     <label for="datum" class="col-lg-5 control-label text-right">Datum potpisa:</label>
                                     <div class="col-lg-7 input-group">
                                         <span class="input-group-addon"><i class="icon-calendar3"></i></span>
-                                        <input type="text" name="datumPotpisa" id="datumPotpisa" class="form-control pickadate-format" placeholder="Izaberi datum&hellip;">
+                                        <input type="text" name="datum_potpisa" id="datum_potpisa" class="form-control pickadate-format" placeholder="Izaberi datum&hellip;">
                                     </div>
                                 </div>
 
                                 <div class="form-group">
                                     <label for="idKorisnika" class="col-lg-5 control-label text-right">ID korisnika:</label>
                                     <div class="col-lg-7">
-                                        <input type="text" id="idKorisnika" name="idKorisnika" class="form-control" placeholder="ID korisnika:">
+                                        <input type="text" id="id_kupac" name="id_kupac" class="form-control" placeholder="ID korisnika:">
                                     </div>
                                 </div>
 
@@ -199,8 +199,8 @@
                                 <div class="form-group">
                                     <label for="serviceType" class="col-lg-5 control-label text-right">Tip servisa:</label>
                                     <div class="col-lg-7">
-                                        <select class="select" data-placeholder="Izaberi tip servisa" name="tipServisa" id="tipServisa">
-                                            <option value="" selected disabled></option>
+                                        <select class="select" data-placeholder="Izaberi tip servisa" name="tip_servisa" id="tip_servisa">
+                                            <option value="" selected></option>
                                             @if(isset($tipovi_servisa))
                                                 @foreach($tipovi_servisa as $ts)
                                                     <option value="{{ $ts->id }}">{{ $ts->naziv }}</option>
@@ -215,8 +215,8 @@
                                 <div class="form-group">
                                     <label for="technology" class="col-lg-5 control-label text-right">Tip tehnologije:</label>
                                     <div class="col-lg-7">
-                                        <select class="select" data-placeholder="Izaberi tip tehnologije" name="tipTehnologije" id="tipTehnologije">
-                                            <option value="" selected disabled></option>
+                                        <select class="select" data-placeholder="Izaberi tip tehnologije" name="tehnologija" id="tehnologija">
+                                            <option value="" selected></option>
                                             @if(isset($tipovi_tehnologije))
                                                 @foreach($tipovi_tehnologije as $tt)
                                                     <option value="{{ $tt->id }}">{{ $tt->naziv }}</option>
@@ -232,7 +232,7 @@
                                     <label for="uo" class="col-lg-5 control-label text-right">Ugovorna obaveza:</label>
                                     <div class="col-lg-7">
                                         <select class="select" data-placeholder="Izaberi ugovornu obavezu" name="uo" id="uo">
-                                            <option value="" selected disabled></option>
+                                            <option value="" selected></option>
                                             <option value="12">12</option>
                                             <option value="24">24</option>
                                             <option value="36">36</option>

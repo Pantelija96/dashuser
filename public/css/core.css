@@ -6190,3 +6190,8 @@ h6.panel-title,
 #filteri{
     display: none;
 }
+
+.custom_error_msg{
+    text-align: center;
+    padding: 3px;
+}

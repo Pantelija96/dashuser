@@ -1,233 +1,165 @@
+// noinspection JSJQueryEfficiency
+
 var brojRedova = 1;
-var brojAktivnihRedova = 1;
-var stavke = [];
 var aktivneStavke = [1];
 var proveraIp = false;
+var posetaDrugojStrani = false;
 
-$(document).ready(function() {
-    //Forma podesavanja
-    $.fn.stepy.defaults.legend = false;
-    $.fn.stepy.defaults.transition = 'fade';
-    $.fn.stepy.defaults.duration = 250;
-    $.fn.stepy.defaults.backLabel = '<i class="icon-arrow-left13 position-left"></i> Nazad';
-    $.fn.stepy.defaults.nextLabel = 'Dalje <i class="icon-arrow-right14 position-right"></i>';
+const firstStepIDs = [
+    'id_korisnik',
+    'connectivity_plan',
+    'naziv_kupac',
+    'pib',
+    'mb',
+    'email',
+    'telefon',
+    'kam',
+    'segment',
+    'partner',
+    'naziv_ugovora',
+    'tip_servisa',
+    'naziv_servisa',
+    'tip_ugovora',
+    'broj_ugovora',
+    'datum',
+    'zbirni_racun',
+    'uo',
+    'tip_tehnologije',
+    'vrsta_senzora',
+    'lokacija_app'
+];
+var stavkeFakture = [];
+var pickDateOptions = {
+    selectYears: true,
+    selectMonths: true,
+    selectDay: false,
+    monthsFull: ['Januar', 'Februar', 'Mart', 'April', 'Maj', 'Jun', 'Jul', 'Avgust', 'Septembar', 'Oktobar', 'Novembar', 'Decembar'],
+    weekdaysShort: ['Ned', 'Pon', 'Uto', 'Sre', 'Čet', 'Pet', 'Sub'],
+    today: 'Danas',
+    clear: 'Poništi',
+    format: 'mmm dd, yyyy',
+    formatSubmit: 'yyyy-mm-dd',
+    hiddenSuffix: '_data',
+    editable: true
+};
+function lokacijaApp(){
+    var lokacija = $("#lokacija_app").val();
+    if(parseInt(lokacija) === 2){
+        $('#nazivWrap').css("display", "block");
+        $('#ipAddresaWrap').css("display", "block");
+        proveraIp = true;
+    }
+    else{
+        $('#nazivWrap').css("display", "none");
+        $('#ipAddresaWrap').css("display", "none");
+        proveraIp = false;
+    }
+}
+function firstStepValidation(){
+    var errors = [];
 
-    $(".stepy-callbacks").stepy({
-        transition: 'slide',
-        next: function(index) {
-            //validaciju za prvi korak
-            var greske = [];
-            var allIDs = [
-                'idKorisnikaError',
-                'connectivityPlanError',
-                'nazivFirmeError',
-                'pibError',
-                'mbrError',
-                'telefonError',
-                'kamError',
-                'segmentError',
-                'nazivUgovoraError',
-                'tipUgovoraError',
-                'tipServisaError',
-                'nazivServisaError',
-                'partnerError',
-                'tipTehnologijeError',
-                'brojUgovoraError',
-                'datumError',
-                'zbirniRacunError',
-                'uoError',
-                'senzorError',
-                'lokacijaError',
-                'nazivServeraError',
-                'ipAdresaError'
-            ];
+    for(var i = 0; i < firstStepIDs.length; i++){
+        var element = $("#"+firstStepIDs[i]);
+        var element_error = $("#"+firstStepIDs[i]+'_error');
 
-            var idKorisnika = ($("#idKorisnika").val() == "") ?  greske.push('idKorisnika') : $("#idKorisnika").val();
-            var connectivityPlan = ($("#connectivityPlan").val() == "") ?  greske.push('connectivityPlan') : $("#connectivityPlan").val();
-            var nazivFirme = ($("#nazivFirme").val() == "") ?  greske.push('nazivFirme') : $("#nazivFirme").val();
-            var pib = ($("#pib").val() == "") ?  greske.push('pib') : $("#pib").val();
-            var mbr = ($("#mbr").val() == "") ?  greske.push('mbr') : $("#mbr").val();
-            var telefon = ($("#telefon").val() == "") ?  greske.push('telefon') : $("#telefon").val();
-            var kam = ($("#kam").val() == "") ?  greske.push('kam') : $("#kam").val();
-            var segment = ($("#segment").val() == "") ?  greske.push('segment') : $("#segment").val();
-            var nazivUgovora = ($("#nazivUgovora").val() == "") ?  greske.push('nazivUgovora') : $("#nazivUgovora").val();
-            var tipUgovora = ($("#tipUgovora").val() == "") ?  greske.push('tipUgovora') : $("#tipUgovora").val();
-            var tipServisa = ($("#tipServisa").val() == "") ?  greske.push('tipServisa') : $("#tipServisa").val();
-            var nazivServisa = ($("#nazivServisa").val() == "") ?  greske.push('nazivServisa') : $("#nazivServisa").val();
-            var partner = ($("#partner").val() == null) ?  greske.push('partner') : $("#partner").val();
-            var tipTehnologije = ($("#tipTehnologije").val() == null) ?  greske.push('tipTehnologije') : $("#tipTehnologije").val();
-            var brojUgovora = ($("#brojUgovora").val() == "") ?  greske.push('brojUgovora') : $("#brojUgovora").val();
-            var datum = ($("#datum").val() == "") ?  greske.push('datum') : $("#datum").val();
-            var zbirniRacun = ($("#zbirniRacun").val() == "") ?  greske.push('zbirniRacun') : $("#zbirniRacun").val();
-            var uo = ($("#uo").val() == "") ?  greske.push('uo') : $("#uo").val();
-            var tipSenzora = ($("#tipSenzora").val() == null) ?  greske.push('senzor') : $("#tipSenzora").val();
-            var lokacijaAplikacije = ($("#lokacijaAplikacije").val() == "") ?  greske.push('lokacija') : $("#lokacijaAplikacije").val();
+        element_error.attr('style','display: none;');
 
-            if(proveraIp) {
-                var naizv = ($("#nazivServera").val() == "") ? greske.push('nazivServera') : $("#nazivServera").val();
-                var ip = ($("#ipAdresa").val() == "") ? greske.push('ipAdresa') : $("#ipAdresa").val();
-
-                var ipRegex = /^(?!0)(?!.*\.$)((1?\d?\d|25[0-5]|2[0-4]\d)(\.|$)){4}$/;
-                if (!ipRegex.test(ip)) {
-                    //nije prosao regularni izraz
-                    greske.push('ipAdresa');
-                }
-            }
-
-            for(var i = 0; i < allIDs.length; i++){
-                $("#"+allIDs[i]).attr('style','display: none;');
-            }
-            if(greske.length === 0){
-                prikaziStavkeFakture();
-                return true;
-            }
-            else{
-                for(var i = 0; i < greske.length; i++){
-                    $("#"+greske[i]+"Error").attr('style','');
-                }
-                greske = [];
-                //sweet alert
-                new PNotify({
-                    title: 'Greška!',
-                    text: 'Nisu popunjena sva obavezna polja!',
-                    addclass: 'bg-telekom-slova',
-                    hide: false,
-                    buttons: {
-                        sticker: false
-                    }
-                });
-                //dohvatiti sve izabrane senzore i ovde povuci sve info za stavke fakture OVDE STOJI SAMO ZBOG TESTA !!!!
-                prikaziStavkeFakture();
-                return false; //sledeci korak
-            }
-        },
-        finish: function() {
-            //provara inputa za komercijalne uslove
-            var greske = [];
-            if(aktivneStavke.length === 0){
-                new PNotify({
-                    title: 'Greška!',
-                    text: 'Morate podesiti bar jednu stavku fakture!',
-                    addclass: 'bg-telekom-slova',
-                    hide: false,
-                    buttons: {
-                        sticker: false
-                    }
-                });
-                return false;
-            }
-            for (var i = 1; i <= aktivneStavke.length; i++) {
-
-                $("#stavkaFakture" + (aktivneStavke[i]) + "Error").css("display", "none");
-                $("#pocetakDatum" + (aktivneStavke[i]) + "Error").css("display", "none");
-                $("#krajDatum" + (aktivneStavke[i]) + "Error").css("display", "none");
-                $("#naknada" + (aktivneStavke[i]) + "Error").css("display", "none");
-                $("#status" + (aktivneStavke[i]) + "Error").css("display", "none");
-
-                var stavka = $("#stavkaFakture" + (aktivneStavke[i])).val();
-                if (stavka === "") {
-                    greske.push("#stavkaFakture" + (aktivneStavke[i]) + "Error");
-                }
-
-                var pocetakDatum = $("#pocetakDatum" + (aktivneStavke[i])).val();
-                var pocetakDatumValue = new Date($("#pocetakDatum"+(aktivneStavke[i])+"_hidden").val());
-                if (pocetakDatum === "" || pocetakDatumValue.getDate() > 1) {
-                    greske.push("#pocetakDatum" + (aktivneStavke[i]) + "Error");
-                }
-
-                var krajDatum = $("#krajDatum" + (aktivneStavke[i])).val();
-                var krajDatumValue = new Date($("#krajDatum"+(aktivneStavke[i])+"_hidden").val());
-                var brojDanaUmesecu = (new Date(krajDatumValue.getFullYear(), krajDatumValue.getMonth()+1, 0)).getDate();
-                if (krajDatum === "" || krajDatumValue.getDate() < brojDanaUmesecu) {
-                    greske.push("#krajDatum" + (aktivneStavke[i]) + "Error");
-                }
-
-                var naknada = $("#naknada" + (aktivneStavke[i])).val();
-                if (parseInt(naknada) === 0) {
-                    greske.push("#naknada" + (aktivneStavke[i]) + "Error");
-                }
-
-                var status = $("#status" + (aktivneStavke[i])).val();
-                if (status === "") {
-                    greske.push("#status" + (aktivneStavke[i]) + "Error");
-                }
-            }
-
-
-
-            if (greske.length === 0) {
-                new PNotify({
-                    title: 'Uspešno popunjeno!',
-                    text: 'Slanje...',
-                    addclass: 'bg-success'
-                });
-                return true;
-            }
-            else {
-                //console.log(greske);
-                for (var i = 0; i < greske.length; i++) {
-                    $(greske[i]).css("display", "block");
-                }
-                new PNotify({
-                    title: 'Greška!',
-                    text: 'Nisu popunjena sva obavezna polja!',
-                    addclass: 'bg-telekom-slova',
-                    hide: false,
-                    buttons: {
-                        sticker: false
-                    }
-                });
-                return false;
-            }
-        },
-        titleClick: true
-    });
-
-    $('.stepy-step').find('.button-next').addClass('btn bg-telekom-slova');
-    $('.stepy-step').find('.button-back').addClass('btn bg-telekom-slova');
-
-    //Select podesavanja
-    $('.select').select2({
-        minimumResultsForSearch: Infinity
-    });
-
-    $("#partner").on('select2:opening select2:closing', function( event ) {
-        var $searchfield = $(this).parent().find('.select2-search__field');
-        $searchfield.prop('disabled', true);
-    });
-
-    $("#tipTehnologije").on('select2:opening select2:closing', function( event ) {
-        var $searchfield = $(this).parent().find('.select2-search__field');
-        $searchfield.prop('disabled', true);
-    });
-
-    $("#tipSenzora").on('select2:opening select2:closing', function( event ) {
-        var $searchfield = $(this).parent().find('.select2-search__field');
-        $searchfield.prop('disabled', true);
-    });
-
-    //Date time picker podesavanja
-    $('.pickadate-selectors').pickadate({
-        selectYears: true,
-        selectMonths: true,
-        selectDay: false,
-        monthsFull: ['Januar', 'Februar', 'Mart', 'April', 'Maj', 'Jun', 'Jul', 'Avgust', 'Septembar', 'Oktobar', 'Novembar', 'Decembar'],
-        weekdaysShort: ['Ned', 'Pon', 'Uto', 'Sre', 'Čet', 'Pet', 'Sub'],
-        today: 'Danas',
-        clear: 'Poništi',
-        formatSubmit: 'yyyy/mm/dd 12:00:00'
-    });
-
-    //Podesavanje pritiska na enter
-    document.getElementById("idKorisnika").addEventListener("keydown", function(event) {
-        if (event.key === "Enter") {
-            dohvatiKorisnika();
+        if(element.val() === "" || element.val() === null){
+            errors.push(firstStepIDs[i]+'_error');
+            element_error.attr('style','');
         }
-    });
+    }
 
+    if(proveraIp) {
+        $("#naziv_servera_error").attr('style','display: none;');
+        $("#ip_adresa_error").attr('style','display: none;');
+        if($("#naziv_servera").val() === ""){
+            errors.push('naziv_servera_error');
+            $("#naziv_servera_error").attr('style','');
+        }
 
-})
+        var ip = $("#ip_adresa").val();
+        var ipRegex = /^(?!0)(?!.*\.$)((1?\d?\d|25[0-5]|2[0-4]\d)(\.|$)){4}$/;
+        console.log('regex result ', ipRegex.test(ip));
+        if (!ipRegex.test(ip)) {
+            //nije prosao regularni izraz
+            errors.push('ip_adresa_error');
+            $("#ip_adresa_error").attr('style','');
+        }
+    }
 
+    //console.log('errors: ', errors);
+    return (errors.length === 0);
+}
+function secondStepVerification(){
+    var rows_with_errors = [];
+
+    if(aktivneStavke.length === 0){
+        //obirsane su sve stavke fakture -> strana je prazna -> pravi se ugovor bez komercijalnih uslova
+        return true;
+    }
+
+    if(aktivneStavke.length === 1){
+        //proveriti da li je postavljena stavka fakture, ako nije pravi se ugovor bez komercijalnih uslova
+        var stavka = $("#stavka_fakture_" + (aktivneStavke[0])).val();
+        if(stavka === ""){
+            return true;
+        }
+    }
+
+    for(var i = 0; i < aktivneStavke.length; i++){
+        $("#row_" + (aktivneStavke[i]) + "_error").attr('style','display: none;');
+        $("#stavka_fakture_" + (aktivneStavke[i]) + "_error").attr('style','display: none;');
+        $("#datum_pocetak_" + (aktivneStavke[i]) + "_error").attr('style','display: none;');
+        $("#datum_kraj_" + (aktivneStavke[i]) + "_error").attr('style','display: none;');
+        $("#naknada_" + (aktivneStavke[i]) + "_error").attr('style','display: none;');
+        $("#status_" + (aktivneStavke[i]) + "_error").attr('style','display: none;');
+
+        var id_stavka = $("#stavka_fakture_"+(aktivneStavke[i])).val();
+        var datum_pocetak = $("[name=datum_pocetak_"+aktivneStavke[i]+"_data]").val();
+        var datum_kraj = $("[name=datum_kraj_"+aktivneStavke[i]+"_data]").val();
+        var naknada = $("#naknada_"+(aktivneStavke[i])).val();
+        var status = $("#status_"+(aktivneStavke[i])).val();
+
+        var row_errors = [];
+
+        if(id_stavka === "") row_errors.push('stavka_fakture_'+aktivneStavke[i]+ "_error");
+        if(naknada === "") row_errors.push('naknada_'+aktivneStavke[i]+ "_error");
+        if(status === "") row_errors.push('status_'+aktivneStavke[i]+ "_error");
+
+        if(datum_pocetak === ""){
+            row_errors.push('datum_pocetak_'+aktivneStavke[i]+ "_error");
+        }
+        else{
+            let datum = new Date(datum_pocetak);
+            if(datum.getDate() !== 1){
+                row_errors.push('datum_pocetak_'+aktivneStavke[i]+ "_error");
+            }
+        }
+
+        if(datum_kraj === ""){
+            row_errors.push('datum_kraj_'+aktivneStavke[i]+ "_error");
+        }
+        else{
+            let datum = new Date(datum_kraj);
+            var last_day = new Date(datum.getFullYear(), datum.getMonth() + 1, 0).getDate();
+
+            if(datum.getDate() !== last_day){
+                row_errors.push('datum_kraj_'+aktivneStavke[i]+ "_error");
+            }
+        }
+
+        if(row_errors.length !== 0){
+            $("#row_" + (aktivneStavke[i]) + "_error").attr('style','');
+            for(var j = 0; j < row_errors.length; j++){
+                $("#"+row_errors[j]).attr('style','');
+            }
+            rows_with_errors.push(aktivneStavke[i]);
+        }
+    }
+
+    return rows_with_errors.length === 0;
+}
 function dohvatiKorisnika(){
     var idKorisnika = $("#idKorisnika").val();
     if(idKorisnika === ""){
@@ -450,18 +382,293 @@ function dohvatiKorisnika(){
         });
     }
 }
-
 function createConnPlan(){
     var text = "iot-cs/";
-
-    var selectedText = $('#zbirniRacun').select2('data')[0].text.replaceAll('.','_');
-
+    var selectedText = $('#zbirni_racun').select2('data')[0].text.replaceAll('.','_');
     text += selectedText;
-
-    $("#connectivityPlan").val(text);
+    $("#connectivity_plan").val(text);
 }
+function addRow(){
+    brojRedova++;
+    var new_row = `
+        <div class="row" id="row_`+brojRedova+`">
+            <div class="col-md-2 form-group">
+                <select name="stavka_fakture_`+brojRedova+`" id="stavka_fakture_`+brojRedova+`" data-placeholder="Stavka fakture" class="select new_row_select" onchange="stavkaChanged(`+brojRedova+`)">
+                    <option></option>
+                </select>
+                <label id="stavka_fakture_`+brojRedova+`_error" for="stavka_fakture_`+brojRedova+`" class="validation-error-label" style="display: none;">Obavezno polje!</label>
+            </div>
 
-function promenaLokacije(){
+            <div class="col-md-1 form-group" style="margin-left: 5px;">
+                <input type="text" name="datum_pocetak_`+brojRedova+`" id="datum_pocetak_`+brojRedova+`" class="form-control pickadate-selectors" placeholder="Datum početak">
+                <label id="datum_pocetak_`+brojRedova+`_error" for="datum_pocetak_`+brojRedova+`" class="validation-error-label" style="display: none;">Mora biti prvi dan u mesecu!</label>
+            </div>
+
+            <div class="col-md-1 form-group" style="margin-left: 5px;">
+                <input type="text" name="datum_kraj_`+brojRedova+`" id="datum_kraj_`+brojRedova+`" class="form-control pickadate-selectors" placeholder="Datum kraj">
+                <label id="datum_kraj_`+brojRedova+`_error" for="datum_kraj_`+brojRedova+`" class="validation-error-label" style="display: none;">Mora biti prvi dan u mesecu!</label>
+            </div>
+
+            <div class="col-md-2 form-group" style="margin-left: 5px;">
+                <input type="number" step=".01" min="0" name="naknada_`+brojRedova+`" id="naknada_`+brojRedova+`" class="form-control" min="0" value="0">
+                <label id="naknada_`+brojRedova+`_error" for="naknada_`+brojRedova+`" class="validation-error-label" style="display: none;">Obavezno polje!</label>
+            </div>
+
+            <div class="col-md-1 form-group" style="margin-left: 5px;">
+                    <select name="status_`+brojRedova+`" id="status_`+brojRedova+`" data-placeholder="Status" class="select">
+                        <option></option>
+                        <option value="1">Aktivni</option>
+                        <option value="2">Prijavljeni</option>
+                        <option value="3">N/A</option>
+                    </select>
+                    <label id="status_`+brojRedova+`_error" for="status_`+brojRedova+`" class="validation-error-label" style="display: none;">Obavezno polje!</label>
+            </div>
+
+            <div class="col-md-1 form-group" style="margin-left: 5px;">
+                <input type="number" step="0.1" name="min_`+brojRedova+`" id="min_`+brojRedova+`" class="form-control" value="0" step="1">
+            </div>
+
+            <div class="col-md-1 form-group" style="margin-left: 5px;">
+                <input type="number" step="0.1" name="max_`+brojRedova+`" id="max_`+brojRedova+`" class="form-control" value="0" step="1">
+            </div>
+
+            <div class="col-md-1 form-group" style="margin-left: 5px;">
+                <div class="checkbox" style="margin-left: 40%;">
+                    <input type="checkbox" class="control-primary" name="sim_`+brojRedova+`" id="sim_`+brojRedova+`" value="0">
+                </div>
+            </div>
+
+            <div class="col-md-1 form-group" style="margin-left: 5px;">
+                <div class="checkbox" style="margin-left: 40%;">
+                    <input type="checkbox" class="control-primary" name="uredjaj_`+brojRedova+`" id="uredjaj_`+brojRedova+`" value="0">
+                </div>
+            </div>
+
+            <div class="col-md-1 form-group" style="margin-left: 5px;">
+                <ul class="icons-list text-center form-control" style="border: none;" id="link_brisanje_1">
+                    <li class="text-danger-800" style="padding-top: 6px;"><a href="#"  onclick="removeRow(`+brojRedova+`)" data-popup="tooltip" title="Obriši red: `+brojRedova+`"><i style="font-size: 20px;" class="icon-trash"></i></a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="row" id="row_`+brojRedova+`_error" style="display: none;">
+            <div class="col-md-2 form-group">
+                <label id="stavka_fakture_`+brojRedova+`_error" for="stavka_fakture_`+brojRedova+`" class="validation-error-label" style="display: none;">Obavezno polje!</label>
+            </div>
+
+            <div class="col-md-1 form-group" style="margin-left: 5px; ">
+                <label id="datum_pocetak_`+brojRedova+`_error" for="datum_pocetak_`+brojRedova+`" class="validation-error-label" style="display: none;">Mora biti prvi dan u mesecu!</label>
+            </div>
+
+            <div class="col-md-1 form-group" style="margin-left: 5px; ">
+                <label id="datum_kraj_`+brojRedova+`_error" for="datum_kraj_`+brojRedova+`" class="validation-error-label" style="display: none;">Mora biti prvi dan u mesecu!</label>
+            </div>
+
+            <div class="col-md-2 form-group" style="margin-left: 5px; ">
+                <label id="naknada_`+brojRedova+`_error" for="naknada_`+brojRedova+`" class="validation-error-label" style="display: none;">Obavezno polje!</label>
+            </div>
+
+            <div class="col-md-1 form-group" style="margin-left: 5px; ">
+                <label id="status_`+brojRedova+`_error" for="status_`+brojRedova+`" class="validation-error-label" style="display: none;">Obavezno polje!</label>
+            </div>
+        </div>
+    `;
+
+    $("#komercijalni_uslovi").append(new_row);
+
+    $("#stavka_fakture_"+brojRedova).select2({
+        minimumResultsForSearch: Infinity,
+        placeholder: "Stavka fakture",
+        data: stavkeFakture
+    });
+    $("#status_"+brojRedova).select2({
+        minimumResultsForSearch: Infinity,
+    });
+
+    $("#datum_pocetak_"+brojRedova).pickadate(pickDateOptions);
+    $("#datum_kraj_"+brojRedova).pickadate(pickDateOptions);
+
+    aktivneStavke.push(brojRedova);
+    $("#aktivne_stavke").val(aktivneStavke);
+
+    $(".control-primary").uniform({
+        radioClass: 'choice',
+        wrapperClass: 'border-danger-600 text-danger-800'
+    });
+}
+function removeRow(row_id){
+    $("#row_"+row_id).remove();
+    $("#row_"+row_id+"_error").remove();
+    var index = aktivneStavke.indexOf(row_id);
+    aktivneStavke.splice(index, 1);
+    $("#aktivne_stavke").val(aktivneStavke);
+}
+function stavkaChanged(row_id){
+    //dohvatanje naknade za stavku fakture
+    var selected = $("#stavka_fakture_"+row_id).val();
+    var id_senzor = selected.split('|')[0];
+    var id_stavka_fakture = selected.split('|')[1];
+    $.ajax({
+        type: "GET",
+        url: baseUrl+'ajax/naknada/'+id_stavka_fakture,
+        success: function(data) {
+            $("#naknada_"+row_id).val(data.naknada);
+        },
+        error: function (xhr, status, error){
+            console.log(xhr);
+            console.log(status);
+            console.log(error);
+        }
+    });
+}
+function getSoapUser(){
+    var id_korisnik = $("#id_korisnik").val();
+    if(id_korisnik === ""){
+        new PNotify({
+            title: 'Greška!',
+            text: 'Morate uneti Id korisnika!',
+            addclass: 'bg-telekom-slova',
+            hide: false,
+            buttons: {
+                sticker: false
+            }
+        });
+        $("#naziv_kupac").val("").prop("disabled", true);
+        $("#mbr").val("").prop("disabled", true);
+        $("#pib").val("").prop("disabled", true);
+        $("#telefon").val("").prop("disabled", true);
+        $("#email").val("").prop("disabled", true);
+        $("#segment").val("").prop("disabled", true);
+        $("#kam").val("").prop("disabled", true);
+    }
+    else{
+        $.ajax({
+            type: "GET",
+            url: baseUrl+'ajax/getuser/'+id_korisnik,
+            success: function(data) {
+                console.log(data);
+                $("#naziv_kupac").val("naziv kupca "+data.id).prop("readonly", true);
+                $("#mb").val(data.mbr).prop("readonly", true);
+                $("#pib").val(data.pib).prop("readonly", true);
+                $("#telefon").val(data.telefon).prop("readonly", true);
+                $("#email").val(data.email).prop("readonly", true);
+                $("#segment").val(data.email).prop("readonly", true);
+                $("#kam").val(data.kam).prop("readonly", true);
+
+                var zbirni_racuni_test = [
+                    {
+                        id: "zbr1",
+                        text: "zbr1",
+                    },
+                    {
+                        id: "zbr2",
+                        text: "zbr2"
+                    }
+                ];
+                $("#zbirni_racun").select2({
+                    minimumResultsForSearch: Infinity,
+                    data: zbirni_racuni_test
+                });
+            },
+            error: function (xhr, status, error){
+                console.log(xhr);
+                console.log(status);
+                console.log(error);
+            }
+        });
+    }
+}
+$(document).ready(function() {
+    //Forma podesavanja
+    $.fn.stepy.defaults.legend = false;
+    $.fn.stepy.defaults.transition = 'fade';
+    $.fn.stepy.defaults.duration = 250;
+    $.fn.stepy.defaults.backLabel = '<i class="icon-arrow-left13 position-left"></i> Nazad';
+    $.fn.stepy.defaults.nextLabel = 'Dalje <i class="icon-arrow-right14 position-right"></i>';
+    $(".stepy-callbacks").stepy({
+        transition: 'slide',
+        next: function(index) {
+            var validation = firstStepValidation();
+            posetaDrugojStrani = !validation;
+            $('#vrsta_senzora').prop('readonly',true);
+            return validation;
+        },
+        finish: function() {
+            //provara inputa za komercijalne uslove
+            return secondStepVerification();
+        },
+        titleClick: true
+    });
+    $('.stepy-step').find('.button-next').addClass('btn bg-telekom-slova');
+    $('.stepy-step').find('.button-back').addClass('btn bg-telekom-slova');
+
+    //Select podesavanja
+    $('.select').select2({
+        minimumResultsForSearch: Infinity
+    });
+    $(".multiple-custom").on('select2:opening select2:closing', function( event ) {
+        var $searchfield = $(this).parent().find('.select2-search__field');
+        $searchfield.prop('disabled', true);
+    });
+    $('#vrsta_senzora').on('change', function (e) {
+        var selected = $(this).select2('data');
+        var select_data = [];
+        for (var i = 0; i < stavkeIzBaze.length; i++) {
+            if (stavkeIzBaze[i].zavisi_od_vrste_senzora === 0) {
+                select_data.push({
+                    id: "0|" + stavkeIzBaze[i].id,
+                    text: stavkeIzBaze[i].naziv
+                })
+            }
+        }
+        for (var j = 0; j < selected.length; j++) {
+            //debugger;
+            var obj = {
+                text: selected[j].text,
+                children: []
+            };
+            for (var z = 0; z < stavkeIzBaze.length; z++) {
+                if (stavkeIzBaze[z].zavisi_od_vrste_senzora === 1) {
+                    obj.children.push({
+                        id: selected[j].id + "|" + stavkeIzBaze[z].id,
+                        text: stavkeIzBaze[z].naziv + selected[j].text
+                    });
+                }
+            }
+            select_data.push(obj);
+        }
+        stavkeFakture = select_data;
+        if(!posetaDrugojStrani){
+            var first_select = $("#stavka_fakture_1");
+            first_select.html('<option></option>');
+            first_select.select2({
+                minimumResultsForSearch: Infinity,
+                placeholder: "Stavka fakture",
+                data: select_data
+            });
+        }
+    });
+
+
+    //Date time picker podesavanja
+    $('.pickadate-selectors').pickadate(pickDateOptions);
+
+    //Podesavanje pritiska na enter
+    document.getElementById("id_korisnik").addEventListener("keydown", function(event) {
+        if (event.key === "Enter") {
+            getSoapUser();
+        }
+    });
+
+    //Checkbox
+    $(".control-primary").uniform({
+        radioClass: 'choice',
+        wrapperClass: 'border-danger-600 text-danger-800'
+    });
+})
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/*function promenaLokacije(){
     var lokacija = $("#lokacijaAplikacije").val();
     if(parseInt(lokacija) === 2){
         $('#nazivWrap').css("display", "block");
@@ -599,10 +806,10 @@ function dodajNoviRed(){
 
     $("#aktivneStavke").val(aktivneStavke);
     aktivneStavke.push(brojRedova);
-    /*console.log("dodavanje");
+    console.log("dodavanje");
     console.log("broj redova = "+brojRedova);
     console.log("brojAktivnihRedova = "+brojAktivnihRedova);
-    console.log(aktivneStavke);*/
+    console.log(aktivneStavke);
 }
 
 function obrisiRed(idRed){
@@ -635,10 +842,10 @@ function obrisiRed(idRed){
     aktivneStavke.splice(index, 1);
     $("#aktivneStavke").val(aktivneStavke);
 
-    /*console.log("brisanje");
+    console.log("brisanje");
     console.log("broj redova = "+brojRedova);
     console.log("brojAktivnihRedova = "+brojAktivnihRedova);
-    console.log(aktivneStavke);*/
+    console.log(aktivneStavke);
 }
 
 function izbranaStavkaFakture(idReda){
@@ -648,4 +855,63 @@ function izbranaStavkaFakture(idReda){
             $("#naknada"+idReda).val(stavke[i].naknada);
         }
     }
-}
+}*/
+
+
+
+
+
+
+
+
+
+
+
+
+/*if(posetaDrugojStrani){
+            var selected2 = $(this).select2('data');
+            var stavke_fakture_text = [];
+            for (var i = 0; i < stavkeFakture.length; i++){
+                stavke_fakture_text.push(stavkeFakture[i].text)
+            }
+
+            for(var j = 0; j < selected2.length; j++){
+                if(!stavke_fakture_text.includes(selected2[j].text)){
+                    console.log('text koji fali', selected2[j].text);
+                }
+            }
+
+
+
+
+
+
+
+
+             /*if (stavkeFakture[i].text !== selected2[j].text) {
+            var obj2 = {
+                text: selected2[j].text,
+                children: []
+            };
+
+            let opt_grp = document.createElement('optgroup');
+            opt_grp.label = selected2[j].text;
+            for (var z = 0; z < stavkeIzBaze.length; z++) {
+                if (stavkeIzBaze[z].zavisi_od_vrste_senzora === 1) {
+                    var option = document.createElement('option');
+                    option.value = selected2[j].id + "|" + stavkeIzBaze[z].id;
+                    option.innerHTML = stavkeIzBaze[z].naziv + selected2[j].text;
+                    opt_grp.appendChild(option);
+                    obj2.children.push({
+                        id: selected2[j].id + "|" + stavkeIzBaze[z].id,
+                        text: stavkeIzBaze[z].naziv + selected2[j].text
+                    });
+                }
+            }
+            stavkeFakture.push(obj2);
+            $(".stavka_select").append(opt_grp);
+
+            console.log('stavke fakture', stavkeFakture);
+            console.log('stavke texts', stavke_fakture_text);
+            console.log('selected data 2', selected2);
+        }*/
