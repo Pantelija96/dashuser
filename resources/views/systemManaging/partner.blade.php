@@ -7,7 +7,7 @@
 @endsection
 
 @section('additionalAppJs')
-    <script type="text/javascript" src="{{ asset('/') }}js/lokacijaapp.js"></script>
+    <script type="text/javascript" src="{{ asset('/') }}js/partner.js"></script>
     <script type="text/javascript">
         var baseUrl = "{{ asset('/') }}";
     </script>
@@ -17,7 +17,7 @@
     class="active"
 @endsection
 
-@section('lokacijaapp')
+@section('partner')
     class="active"
 @endsection
 
@@ -31,7 +31,7 @@
                 <ul class="breadcrumb position-left">
                     <li><a href="{{ url('/home') }}">Početna</a></li>
                     <li><a href="#">Menadžment sistema</a></li>
-                    <li><a href="#">Lokacija aplikacije</a></li>
+                    <li><a href="#">Partner</a></li>
                 </ul>
             </div>
         </div>
@@ -53,16 +53,16 @@
                     </tr>
                     </thead>
                     <tbody>
-                    @if(count($lokacije_app) > 0)
-                        @foreach($lokacije_app as $lok)
+                    @if(count($partneri) > 0)
+                        @foreach($partneri as $pa)
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
-                                <td>{{ $lok->naziv }}</td>
+                                <td>{{ $pa->naziv }}</td>
                                 <td>
                                     <ul class="icons-list text-center">
-                                        <li class="text-danger-800"><a href="{{ url('/menage/lokacijaapp/'.$lok->id) }}" data-popup="tooltip" title="Izmeni"><i class="icon-pencil7"></i></a></li>
+                                        <li class="text-danger-800"><a href="{{ url('/menage/partner/'.$pa->id) }}" data-popup="tooltip" title="Izmeni"><i class="icon-pencil7"></i></a></li>
                                         <li> | </li>
-                                        <li class="text-danger-800"><a href="#" onclick="deleteRecord({{ $lok->id }})" data-popup="tooltip" title="Obriši"><i class="icon-trash"></i></a></li>
+                                        <li class="text-danger-800"><a href="#" onclick="deleteRecord({{ $pa->id }})" data-popup="tooltip" title="Obriši"><i class="icon-trash"></i></a></li>
                                     </ul>
                                 </td>
                             </tr>
@@ -74,19 +74,19 @@
                 </table>
             </div>
 
-            <form class="form-horizontal" @if(isset($loakcija_app))  action="{{ route('editLokacijuApp') }}" @else  action="{{ route('insertLokacijuApp') }}" @endif method="POST" id="form_tehnologija">
+            <form class="form-horizontal" @if(isset($partner))  action="{{ route('editPartnera') }}" @else  action="{{ route('insertPartnera') }}" @endif method="POST" id="form_tehnologija">
                 {{ csrf_field() }}
-                @if(isset($loakcija_app))
-                    <input type="hidden" name="id_lokacija_aplikacije" id="id_lokacija_aplikacije" value="{{ $loakcija_app->id }}" />
+                @if(isset($partner))
+                    <input type="hidden" name="id_partner" id="id_partner" value="{{ $partner->id }}" />
                 @endif
                 <div class="panel panel-flat" style="border: none;">
                     <div class="panel-heading">
                         <div class="row">
                             <div class="col-md-10 col-md-offset-1">
-                                @if(isset($loakcija_app))
-                                    <h5 class="panel-title">Izmeni lokaciju aplikacije</h5>
+                                @if(isset($partner))
+                                    <h5 class="panel-title">Izmeni partnera</h5>
                                 @else
-                                    <h5 class="panel-title">Dodaj novu lokaciju aplikacije</h5>
+                                    <h5 class="panel-title">Dodaj novog partnera</h5>
                                 @endif
                             </div>
                         </div>
@@ -99,7 +99,7 @@
                                 <div class="form-group">
                                     <label class="col-lg-3 control-label" for="naziv">Naziv:</label>
                                     <div class="col-lg-9">
-                                        <input type="text" name="naziv" id="naziv" class="form-control" placeholder="Naziv servisa" @if(isset($loakcija_app)) value="{{ $loakcija_app->naziv }}" @else value="{{ old('naziv') }}" @endif>
+                                        <input type="text" name="naziv" id="naziv" class="form-control" placeholder="Naziv partnera" @if(isset($partner)) value="{{ $partner->naziv }}" @else value="{{ old('naziv') }}" @endif>
                                         <label id="naziv_error" for="naziv" class="validation-error-label" style="display: none;">Obavezno polje!</label>
                                         @if($errors->has('naziv') && $errors->any())
                                             <label id="naziv_error_2" for="naziv_error_2" class="validation-error-label" style="display: block;">Obavezno polje!</label>
@@ -108,7 +108,7 @@
                                 </div>
 
                                 <div class="text-right">
-                                    <button type="button" class="btn bg-telekom-slova" onclick="proveraUnosa()">@if(isset($loakcija_app)) Sačuvaj izmene @else Dodaj @endif <i class="icon-arrow-right14 position-right"></i></button>
+                                    <button type="button" class="btn bg-telekom-slova" onclick="proveraUnosa()">@if(isset($partner)) Sačuvaj izmene @else Dodaj @endif <i class="icon-arrow-right14 position-right"></i></button>
                                 </div>
                             </div>
                         </div>

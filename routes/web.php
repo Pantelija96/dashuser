@@ -35,43 +35,50 @@ Route::group(['middleware' => ['auth:web']], function (){
 
         Route::prefix('/delete')->group(function (){
             Route::get('/stavkafakture/{id}', [BackendController::class, 'deleteStavkaFakture']);
+            Route::get('/tipugovora/{id}', [BackendController::class, 'deleteTipUgovora']);
+            Route::get('/tipservisa/{id}', [BackendController::class, 'deleteTipServisa']);
+            Route::get('/tehnologije/{id}', [BackendController::class, 'deleteTehnologije']);
+            Route::get('/partner/{id}', [BackendController::class, 'deletePartnera']);
+            Route::get('/nazivservisa/{id}', [BackendController::class, 'deleteServis']);
+            Route::get('/vrstasenzora/{id}', [BackendController::class, 'deleteVrstuSenzora']);
+            Route::get('/lokacijaapp/{id}', [BackendController::class, 'deleteLokacijuApp']);
         });
     });
 
     Route::prefix('/menage')->group(function (){
         Route::controller(FrontendController::class)->group(function (){
-            Route::get('/lokacijaapp/{id?}', 'dodajLokacijuApp');
-            Route::get('/nazivservisa/{id?}', 'dodajNazivServisa');
-            Route::get('/partner/{id?}', 'dodajPartnera');
-            Route::get('/tehnologije/{id?}', 'dodajTehnologije');
-            Route::get('/tipservisa/{id?}', 'dodajTipServisa');
-            Route::get('/tipugovora/{id?}', 'dodajTipUgovora');
-            Route::get('/vrstasenzora/{id?}', 'dodajVrstuSenzora');
             Route::get('/stavkafakture/{id?}', 'dodajStavkuFakture');
+            Route::get('/tipugovora/{id?}', 'dodajTipUgovora');
+            Route::get('/tipservisa/{id?}', 'dodajTipServisa');
+            Route::get('/tehnologije/{id?}', 'dodajTehnologije');
+            Route::get('/partner/{id?}', 'dodajPartnera');
+            Route::get('/nazivservisa/{id?}', 'dodajServis');
+            Route::get('/vrstasenzora/{id?}', 'dodajVrstuSenzora');
+            Route::get('/lokacijaapp/{id?}', 'dodajLokacijuApp');
         });
 
         Route::controller(BackendController::class)->group(function(){
-            Route::post('/lokacijaapp', 'dodajLokacijuApp');
-            Route::post('/nazivservisa', 'dodajNazivServisa');
-            Route::post('/partner', 'dodajPartnera');
-            Route::post('/tehnologije', 'dodajTehnologije');
-            Route::post('/tipservisa', 'dodajTipServisa');
-            Route::post('/tipugovora', 'dodajTipUgovora');
-            Route::post('/vrstasenzora', 'dodajVrstuSenzora');
             Route::post('/stavkafakture', 'dodajStavkuFakture')->name('insertStavkaFakture');
+            Route::post('/tipugovora', 'dodajTipUgovora')->name('insertTipUgovora');
+            Route::post('/tipservisa', 'dodajTipServisa')->name('insertTipServisa');
+            Route::post('/tehnologije', 'dodajTehnologije')->name('insertTehnologija');
+            Route::post('/partner', 'dodajPartnera')->name('insertPartnera');
+            Route::post('/nazivservisa', 'dodajNazivServisa')->name('insertServisa');
+            Route::post('/vrstasenzora', 'dodajVrstuSenzora')->name('insertVrstuSenzora');
+            Route::post('/lokacijaapp', 'dodajLokacijuApp')->name('insertLokacijuApp');
         });
     });
 
     Route::prefix('/edit')->group(function (){
         Route::controller(BackendController::class)->group(function(){
-            Route::post('/lokacijaapp', 'editLokacijuApp');
-            Route::post('/nazivservisa', 'editNazivServisa');
-            Route::post('/partner', 'editPartnera');
-            Route::post('/tehnologije', 'editTehnologije');
-            Route::post('/tipservisa', 'editTipServisa');
-            Route::post('/tipugovora', 'editTipUgovora');
-            Route::post('/vrstasenzora', 'editVrstuSenzora');
             Route::post('/stavkafakture', 'editStavkaFakture')->name('editStavkaFakture');
+            Route::post('/tipugovora', 'editTipUgovora')->name('editTipUgovora');
+            Route::post('/tipservisa', 'editTipServisa')->name('editTipServisa');
+            Route::post('/tehnologije', 'editTehnologije')->name('editTehnologija');
+            Route::post('/partner', 'editPartnera')->name('editPartnera');
+            Route::post('/nazivservisa', 'editNazivServisa')->name('editServisa');
+            Route::post('/vrstasenzora', 'editVrstaSenzora')->name('editVrstaSenzora');
+            Route::post('/lokacijaapp', 'editLokacijuApp')->name('editLokacijuApp');
         });
     });
 });

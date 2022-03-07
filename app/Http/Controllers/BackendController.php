@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\EditRequest;
 use App\Http\Requests\InsertRequest;
 use App\Http\Requests\LoginRequest;
 use App\Models\LokacijaApp;
@@ -55,67 +56,64 @@ class BackendController extends Controller
         catch (\Exception $exception){
             Log::error("Greska pri dodavanju $text insert-$idGreske => ".$exception->getMessage());
             return redirect()->back()->with(['error' => "Desila se greska! Id greske : insert-$idGreske"]);
-            //return response(['error' => "Desila se greska! Id greske : insert-$idGreske"]);
         }
         if($insertResult){
-            return redirect()->back()->with(['success' => "Uspesno - $text!"]);
-            //return response(['success'=>"Uspesno - $text!"]);
+            return redirect()->back();
         }
         else{
             Log::error("Greska pri dodavanju $text insert-$idGreske");
             return redirect()->back()->with(['error' => "Desila se greska! Id greske : insert-$idGreske"]);
-            //return response(['error' => "Desila se greska! Id greske : insert-$idGreske"]);
         }
     }
-    public function dodajLokacijuApp(InsertRequest $request){
-        return $this->insert('lokacije aplikacije', LokacijaApp::class, $request->input('naziv'), $request->input('prikazi'), 1);
-    }
-    public function dodajNazivServisa(InsertRequest $request){
-        return $this->insert('naziv servisa', NazivServisa::class, $request->input('naziv'), $request->input('prikazi'), 2);
-    }
-    public function dodajPartnera(InsertRequest $request){
-        return $this->insert('partner', Partner::class, $request->input('naziv'), $request->input('prikazi'), 3);
-    }
-    public function dodajTehnologije(InsertRequest $request){
-        return $this->insert('tehnologije', Tehnologije::class, $request->input('naziv'), $request->input('prikazi'), 4);
-    }
-    public function dodajTipServisa(InsertRequest $request){
-        return $this->insert('tip servisa', TipServisa::class, $request->input('naziv'), $request->input('prikazi'), 5);
+    public function dodajStavkuFakture(Request $request){
+        $validated_data = $request->validate([
+            'naziv' => ['required'],
+            'naknada' => ['required'],
+            'tip_naknade' => ['required']
+        ]);
+
+        try{
+            $result = DB::table('stavka_fakture')->insert([
+                'naziv' => $request->input('naziv'),
+                'tip_naknade' => intval($request->input('tip_naknade')),
+                'naknada' => floatval($request->input('naknada')),
+                'zavisi_od_vrste_senzora' => $request->input('zavisi_od_vrste_senzora') !== null,
+                'prikazi' => true
+            ]);
+        }
+        catch (\Exception $exception){
+            Log::error("Greska pri dodavanju stavke fakture insert-8 => ".$exception->getMessage());
+            return redirect()->back()->with(['greska' => "Desila se greska! Id greske : insert-8"]);
+        }
+        if($result){
+            return redirect()->back();
+        }
+        else{
+            Log::error("Greska pri dodavanju stavke fakture insert-8");
+            return redirect()->back()->with(['greska' => "Desila se greska! Id greske : insert-8"]);
+        }
     }
     public function dodajTipUgovora(InsertRequest $request){
-        return $this->insert('tip ugovora', TipUgovora::class, $request->input('naziv'), $request->input('prikazi'), 6);
+        return $this->insert('tip ugovora', TipUgovora::class, $request->input('naziv'), true, 7);
+    }
+    public function dodajTipServisa(InsertRequest $request){
+        return $this->insert('tip servisa', TipServisa::class, $request->input('naziv'), true, 6);
+    }
+    public function dodajTehnologije(InsertRequest $request){
+        return $this->insert('tehnologija', Tehnologije::class, $request->input('naziv'), true, 5);
+    }
+    public function dodajPartnera(InsertRequest $request){
+        return $this->insert('partner', Partner::class, $request->input('naziv'), true, 4);
+    }
+    public function dodajNazivServisa(InsertRequest $request){
+        return $this->insert('servis', NazivServisa::class, $request->input('naziv'), true, 3);
     }
     public function dodajVrstuSenzora(InsertRequest $request){
-        return $this->insert('vrsta senzora', VrstaSenzora::class, $request->input('naziv'), $request->input('prikazi'), 7);
+        return $this->insert('vrsta senzora', VrstaSenzora::class, $request->input('naziv'), true, 2);
     }
-    public function dodajStavkuFakture(Request $request){
-    $validated_data = $request->validate([
-        'naziv' => ['required'],
-        'naknada' => ['required'],
-        'tip_naknade' => ['required']
-    ]);
-
-    try{
-        $result = DB::table('stavka_fakture')->insert([
-            'naziv' => $request->input('naziv'),
-            'tip_naknade' => intval($request->input('tip_naknade')),
-            'naknada' => floatval($request->input('naknada')),
-            'zavisi_od_vrste_senzora' => $request->input('zavisi_od_vrste_senzora') !== null,
-            'prikazi' => true
-        ]);
+    public function dodajLokacijuApp(InsertRequest $request){
+        return $this->insert('lokacije aplikacije', LokacijaApp::class, $request->input('naziv'), true, 1);
     }
-    catch (\Exception $exception){
-        Log::error("Greska pri dodavanju stavke fakture insert-8 => ".$exception->getMessage());
-        return redirect()->back()->with(['greska' => "Desila se greska! Id greske : insert-8"]);
-    }
-    if($result){
-        return redirect()->back();
-    }
-    else{
-        Log::error("Greska pri dodavanju stavke fakture insert-8");
-        return redirect()->back()->with(['greska' => "Desila se greska! Id greske : insert-8"]);
-    }
-}
 
     public function delete($model, $id, $error_id, $text){
         try{
@@ -137,6 +135,27 @@ class BackendController extends Controller
     }
     public function deleteStavkaFakture($id){
         return $this->delete( StavkaFakture::class, $id, 8, 'stavka fakture');
+    }
+    public function deleteTipUgovora($id){
+        return $this->delete(TipUgovora::class, $id, 7, 'tip ugovora');
+    }
+    public function deleteTipServisa($id){
+        return $this->delete(TipServisa::class, $id, 6, 'tip servisa');
+    }
+    public function deleteTehnologije($id){
+        return $this->delete(Tehnologije::class, $id, 5, 'tip servisa');
+    }
+    public function deletePartnera($id){
+        return $this->delete(Partner::class, $id, 4, 'partner');
+    }
+    public function deleteServis($id){
+        return $this->delete(NazivServisa::class, $id, 3, 'naziv servisa');
+    }
+    public function deleteVrstuSenzora($id){
+        return $this->delete(VrstaSenzora::class, $id, 2, 'vrsta senzora');
+    }
+    public function deleteLokacijuApp($id){
+        return $this->delete(LokacijaApp::class, $id, 1, 'lokacije aplikacije');
     }
 
     public function edit($model, $id, $error_id, $text, $data, $url){
@@ -172,13 +191,61 @@ class BackendController extends Controller
 
         return $this->edit(StavkaFakture::class, $request->input('id_stavka_fakture'), 8, 'stavka_fakture', $update_data, 'stavkafakture');
     }
+    public function editTipUgovora(EditRequest $request){
+        $update_data = [
+            'naziv' => $request->input('naziv')
+        ];
+
+        return $this->edit(TipUgovora::class, $request->input('id_tip_ugovora'), 7, 'tip ugovora', $update_data, 'tipugovora');
+    }
+    public function editTipServisa(EditRequest $request){
+        $update_data = [
+            'naziv' => $request->input('naziv')
+        ];
+
+        return $this->edit(TipServisa::class, $request->input('id_tip_servisa'), 6, 'tip servisa', $update_data, 'tipservisa');
+    }
+    public function editTehnologije(EditRequest $request){
+        $update_data = [
+            'naziv' => $request->input('naziv')
+        ];
+
+        return $this->edit(Tehnologije::class, $request->input('id_tehnologija'), 5, 'tehnologija', $update_data, 'tehnologije');
+    }
+    public function editPartnera(EditRequest $request){
+        $update_data = [
+            'naziv' => $request->input('naziv')
+        ];
+
+        return $this->edit(Partner::class, $request->input('id_partner'), 4, 'partner', $update_data, 'partner');
+    }
+    public function editNazivServisa(EditRequest $request){
+        $update_data = [
+            'naziv' => $request->input('naziv')
+        ];
+
+        return $this->edit(NazivServisa::class, $request->input('id_naziv_servisa'), 3, 'naziv servisa', $update_data, 'nazivservisa');
+    }
+    public function editVrstaSenzora(EditRequest $request){
+        $update_data = [
+            'naziv' => $request->input('naziv')
+        ];
+
+        return $this->edit(VrstaSenzora::class, $request->input('id_vrsta_senzora'), 2, 'vrsta senzora', $update_data, 'vrstasenzora');
+    }
+    public function editLokacijuApp(EditRequest $request){
+        $update_data = [
+            'naziv' => $request->input('naziv')
+        ];
+
+        return $this->edit(LokacijaApp::class, $request->input('id_lokacija_aplikacije'), 1, 'lokacija aplikacije', $update_data, 'lokacijaapp');
+    }
 
 
 
     public function getStavkaFakture($id){
         return StavkaFakture::whereId($id)->first();
     }
-
     public function getSoapUser($id){
         return [
             'id' => $id,

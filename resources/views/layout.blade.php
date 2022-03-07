@@ -99,11 +99,13 @@
                                     <a href="#"><i class="icon-stack2"></i> <span>Menadzment sistema</span></a>
                                     <ul>
                                         <li @yield('stavkafakture')><a href="{{ url('/menage/stavkafakture') }}">Stavka fakture</a></li>
-                                        <li><a href="layout_navbar_sidebar_fixed.html">Fixed navbar &amp; sidebar</a></li>
-                                        <li><a href="layout_sidebar_fixed_native.html">Fixed sidebar native scroll</a></li>
-                                        <li><a href="layout_navbar_hideable.html">Hideable navbar</a></li>
-                                        <li><a href="layout_navbar_hideable_sidebar.html">Hideable &amp; fixed sidebar</a></li>
-                                        <li><a href="layout_footer_fixed.html">Fixed footer</a></li>
+                                        <li @yield('tipugovora')><a href="{{ url('/menage/tipugovora') }}">Tip ugovora</a></li>
+                                        <li @yield('tipservisa')><a href="{{ url('/menage/tipservisa') }}">Tip servisa</a></li>
+                                        <li @yield('tehnologija')><a href="{{ url('/menage/tehnologije') }}">Tip tehnologije</a></li>
+                                        <li @yield('partner')><a href="{{ url('/menage/partner') }}">Partner</a></li>
+                                        <li @yield('nazivservisa')><a href="{{ url('/menage/nazivservisa') }}">Nazivi servisa</a></li>
+                                        <li @yield('vrstasenzora')><a href="{{ url('/menage/vrstasenzora') }}">Vrste senzora</a></li>
+                                        <li @yield('lokacijaapp')><a href="{{ url('/menage/lokacijaapp') }}">Lokacija aplikacije</a></li>
                                     </ul>
                                 </li>
                                 @if(\Illuminate\Support\Facades\Auth::user()->getUloga->id == 1)

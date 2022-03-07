@@ -109,4 +109,53 @@ class FrontendController extends Controller
         $this->data['stavke_fakture'] = StavkaFakture::wherePrikazi(true)->get();
         return view('systemManaging.stavkafakture', $this->data);
     }
+    public function dodajTipUgovora($id = null){
+        if($id){
+            $this->data['tip_ugovora'] = TipUgovora::whereId($id)->first();
+        }
+        $this->data['tipovi_ugovora'] = TipUgovora::wherePrikazi(true)->get();
+        return view('systemManaging.tipugovora', $this->data);
+    }
+    public function dodajTipServisa($id = null){
+        if($id){
+            $this->data['tip_servisa'] = TipServisa::whereId($id)->first();
+        }
+        $this->data['tipovi_servisa'] = TipServisa::wherePrikazi(true)->get();
+        return view('systemManaging.tipservisa', $this->data);
+    }
+    public function dodajTehnologije($id = null){
+        if($id){
+            $this->data['tip_tehnologije'] = Tehnologije::whereId($id)->first();
+        }
+        $this->data['tipovi_tehnologija'] = Tehnologije::wherePrikazi(true)->get();
+        return view('systemManaging.tehnologija', $this->data);
+    }
+    public function dodajPartnera($id = null){
+        if($id){
+            $this->data['partner'] = Partner::whereId($id)->first();
+        }
+        $this->data['partneri'] = Partner::wherePrikazi(true)->get();
+        return view('systemManaging.partner', $this->data);
+    }
+    public function dodajServis($id = null){
+        if($id){
+            $this->data['servis'] = NazivServisa::whereId($id)->first();
+        }
+        $this->data['servisi'] = NazivServisa::wherePrikazi(true)->get();
+        return view('systemManaging.servis', $this->data);
+    }
+    public function dodajVrstuSenzora($id = null){
+        if($id){
+            $this->data['vrsta_senzora'] = VrstaSenzora::whereId($id)->first();
+        }
+        $this->data['vrste_senzora'] = VrstaSenzora::wherePrikazi(true)->get();
+        return view('systemManaging.vrstasenzora', $this->data);
+    }
+    public function dodajLokacijuApp($id = null){
+        if($id){
+            $this->data['loakcija_app'] = LokacijaApp::whereId($id)->first();
+        }
+        $this->data['lokacije_app'] = LokacijaApp::wherePrikazi(true)->get();
+        return view('systemManaging.lokacijaapp', $this->data);
+    }
 }
