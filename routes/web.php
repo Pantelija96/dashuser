@@ -19,7 +19,6 @@ Route::get('/', [FrontendController::class, 'loginPage']);
 Route::post('/login', [BackendController::class, 'login'])->name('login');
 Route::get('/logout',[BackendController::class, 'logout'])->name('logout');
 
-Route::get('/test', [FrontendController::class, 'test']);
 
 Route::group(['middleware' => ['auth:web']], function (){
     Route::get('/home/{homeType?}', [FrontendController::class, 'home']);
@@ -28,10 +27,15 @@ Route::group(['middleware' => ['auth:web']], function (){
     Route::get('/addnew',[FrontendController::class, 'addNewContract']);
     Route::post('/addnewcontract', [BackendController::class, 'addNewContract'])->name('addNewContract');
 
+    Route::get('/addnewuser/{id?}', [FrontendController::class, 'addNewUser']);
+    Route::post('/addnewuser', [BackendController::class, 'addNewUser'])->name('addNewUser');
+    Route::post('edituser', [BackendController::class, 'editUser'])->name('editUser');
+
 
     Route::prefix('/ajax')->group(function (){
         Route::get('/naknada/{id}', [BackendController::class, 'getStavkaFakture']);
         Route::get('/getuser/{id}', [BackendController::class, 'getSoapUser']);
+        Route::get('/deleteuser/{id}', [BackendController::class, 'deleteUser']);
 
         Route::prefix('/delete')->group(function (){
             Route::get('/stavkafakture/{id}', [BackendController::class, 'deleteStavkaFakture']);

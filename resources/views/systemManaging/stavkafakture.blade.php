@@ -91,7 +91,12 @@
                     <div class="panel-heading">
                         <div class="row">
                             <div class="col-md-10 col-md-offset-1">
-                                <h5 class="panel-title">Dodaj novu stavku fakture</h5>
+                                @if(isset($stavka_fakture))
+                                    <h5 class="panel-title">Izmeni stavku fakture</h5>
+                                @else
+                                    <h5 class="panel-title">Dodaj novu stavku fakture</h5>
+                                @endif
+
                             </div>
                         </div>
                     </div>

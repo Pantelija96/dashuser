@@ -18,7 +18,7 @@ function proveraUnosa(){
 
     if(!postoji_geska){
         //poslati formu
-        $("#form_tip_ugovora").submit();
+        $("#form_tip_servisa").submit();
     }
 }
 

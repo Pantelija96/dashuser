@@ -1,7 +1,3 @@
-$(document).ready(function(){
-    $('.select').select2();
-});
-
 $(function() {
     $.extend( $.fn.dataTable.defaults, {
         autoWidth: false,
@@ -49,19 +45,22 @@ $(function() {
         minimumResultsForSearch: Infinity,
         width: 'auto'
     });
-});
 
+    $('.select').select2();
+});
 
 function proveraLozinke(){
     //alert ("TEST");
     var prvaLozinka = $("#lozinka").val();
-    var ponovoLozinka = $("#lozinkaPonovo").val();
+    var ponovoLozinka = $("#lozinka_ponovo").val();
 
     if((prvaLozinka === ponovoLozinka) && ponovoLozinka !== ""){
         $("#dugme").prop('disabled',false);
+        $("#lozinka_ponovo_error").attr('style','display: none;');
     }
     else{
         $("#dugme").prop('disabled',true);
+        $("#lozinka_ponovo_error").attr('style','');
         new PNotify({
             title: 'Greška!',
             text: 'Lozinke se ne poklapaju!',
@@ -74,70 +73,48 @@ function proveraLozinke(){
     }
 }
 
-var postojiGreska = false;
 function proveri(){
+    let greske = [];
+
+    $("#ime_error").attr('style','display: none;');
+    $("#prezime_error").attr('style','display: none;');
+    $("#email_error").attr('style','display: none;');
+    $("#lozinka_error").attr('style','display: none;');
+    $("#lozinka_ponovo_error").attr('style','display: none;');
+    $("#uloga_error").attr('style','display: none;');
+
+    $("#ime_error_2").attr('style','display: none;');
+    $("#prezime_error_2").attr('style','display: none;');
+    $("#email_error_2").attr('style','display: none;');
+    $("#lozinka_error_2").attr('style','display: none;');
+    $("#lozinka_ponovo_error_2").attr('style','display: none;');
+    $("#uloga_error_2").attr('style','display: none;');
+
     var ime = $("#ime").val();
     var prezime = $("#prezime").val();
     var email = $("#email").val();
     var lozinka = $("#lozinka").val();
-    var lozinkaPonovo = $("#lozinkaPonovo").val();
+    var lozinkaPonovo = $("#lozinka_ponovo").val();
     var uloga = $("#uloga").val();
 
-    $("#imeError2").attr('style','display: none;');
-    $("#prezimeError2").attr('style','display: none;');
-    $("#emailError2").attr('style','display: none;');
-    $("#lozinkaError2").attr('style','display: none;');
-    $("#lozinkaPonovoimeError2").attr('style','display: none;');
-    $("#ulogaError2").attr('style','display: none;');
 
-    if(ime === ""){
-        postojiGreska = true;
-        $("#imeError").html("Obavezno polje!").attr('style','');
+    if(ime === "") greske.push('ime_error');
+    if(prezime === "") greske.push('prezime_error');
+    if(email === "") greske.push('email_error');
+    if(lozinka === "") greske.push('lozinka_error');
+    if(lozinkaPonovo === "") greske.push('lozinka_ponovo_error');
+    if(uloga === "") greske.push('uloga_error');
+
+
+    if(greske.length === 0){
+        new PNotify({
+            title: 'Uspešno popunjeno!',
+            text: 'Slanje...',
+            addclass: 'bg-success'
+        });
+        $("#forma").submit();
     }
     else{
-        postojiGreska = false;
-        $("#imeError").attr('style','display: none;');
-    }
-
-    if(prezime === ""){
-        postojiGreska = true;
-        $("#prezimeError").html("Obavezno polje!").attr('style','');
-    }
-    else{
-        postojiGreska = false;
-        $("#prezimeError").attr('style','display: none;');
-    }
-
-    if(email === ""){
-        postojiGreska = true;
-        $("#emailError").html("Obavezno polje!").attr('style','');
-    }
-    else{
-        postojiGreska = false;
-        $("#emailError").attr('style','display: none;');
-    }
-
-    if((lozinka === lozinkaPonovo)){
-        postojiGreska = false;
-        $("#lozinkaError").attr('style','display: none;');
-        $("#lozinkaPonovoError").attr('style','display: none;');
-    }
-    else{
-        postojiGreska = true;
-        $("#lozinkaError").html("Lozinke se ne poklapaju!").attr('style','');
-        $("#lozinkaPonovoError").html("Lozinke se ne poklapaju!").attr('style','');
-    }
-
-    if(uloga === ""){
-        postojiGreska = true;
-        $("#ulogaError").html("Morate izabrati ulogu korisnika!").attr('style','');
-    }
-    else{
-        postojiGreska = false;
-        $("#ulogaError").attr('style','display: none;');
-    }
-
-    if(postojiGreska){
         new PNotify({
             title: 'Greška!',
             text: 'Ispravite greške za nastavak!',
@@ -147,14 +124,9 @@ function proveri(){
                 sticker: false
             }
         });
-    }
-    else{
-        new PNotify({
-            title: 'Uspešno popunjeno!',
-            text: 'Slanje...',
-            addclass: 'bg-success'
-        });
-        document.getElementById("forma").submit();
+        for(let i = 0; i < greske.length; i++){
+            $("#"+greske[i]).attr('style','');
+        }
     }
 
 }
@@ -193,16 +165,14 @@ function brisanjeUsera(idUser){
         notice.get().on('pnotify.confirm', function() {
             $.ajax({
                 type: 'GET',
-                url: baseUrl+'ajax/deletekorisnik/'+idKorisnika,
+                url: baseUrl+'ajax/deleteuser/'+idKorisnika,
                 success: function (data) {
                     new PNotify({
                         title: 'Uspeh!',
                         text: 'Uspešno obrisan korsnik!',
                         addclass: 'bg-success'
                     });
-                    if(data.success){
-                        window.location.reload();
-                    }
+                    window.location.reload();
                 },
                 error: function (xhr, status, error) {
                     new PNotify({

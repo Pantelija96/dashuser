@@ -74,7 +74,7 @@
                 </table>
             </div>
 
-            <form class="form-horizontal" @if(isset($loakcija_app))  action="{{ route('editLokacijuApp') }}" @else  action="{{ route('insertLokacijuApp') }}" @endif method="POST" id="form_tehnologija">
+            <form class="form-horizontal" @if(isset($loakcija_app))  action="{{ route('editLokacijuApp') }}" @else  action="{{ route('insertLokacijuApp') }}" @endif method="POST" id="form_lokacija_aplikacije">
                 {{ csrf_field() }}
                 @if(isset($loakcija_app))
                     <input type="hidden" name="id_lokacija_aplikacije" id="id_lokacija_aplikacije" value="{{ $loakcija_app->id }}" />
@@ -99,7 +99,7 @@
                                 <div class="form-group">
                                     <label class="col-lg-3 control-label" for="naziv">Naziv:</label>
                                     <div class="col-lg-9">
-                                        <input type="text" name="naziv" id="naziv" class="form-control" placeholder="Naziv servisa" @if(isset($loakcija_app)) value="{{ $loakcija_app->naziv }}" @else value="{{ old('naziv') }}" @endif>
+                                        <input type="text" name="naziv" id="naziv" class="form-control" placeholder="Naziv lokacije aplikacije" @if(isset($loakcija_app)) value="{{ $loakcija_app->naziv }}" @else value="{{ old('naziv') }}" @endif>
                                         <label id="naziv_error" for="naziv" class="validation-error-label" style="display: none;">Obavezno polje!</label>
                                         @if($errors->has('naziv') && $errors->any())
                                             <label id="naziv_error_2" for="naziv_error_2" class="validation-error-label" style="display: block;">Obavezno polje!</label>

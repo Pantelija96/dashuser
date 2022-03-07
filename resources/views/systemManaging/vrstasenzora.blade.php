@@ -74,7 +74,7 @@
                 </table>
             </div>
 
-            <form class="form-horizontal" @if(isset($vrsta_senzora))  action="{{ route('editVrstaSenzora') }}" @else  action="{{ route('insertVrstuSenzora') }}" @endif method="POST" id="form_tehnologija">
+            <form class="form-horizontal" @if(isset($vrsta_senzora))  action="{{ route('editVrstaSenzora') }}" @else  action="{{ route('insertVrstuSenzora') }}" @endif method="POST" id="form_vrsta_senzora">
                 {{ csrf_field() }}
                 @if(isset($vrsta_senzora))
                     <input type="hidden" name="id_vrsta_senzora" id="id_vrsta_senzora" value="{{ $vrsta_senzora->id }}" />
@@ -99,7 +99,7 @@
                                 <div class="form-group">
                                     <label class="col-lg-3 control-label" for="naziv">Naziv:</label>
                                     <div class="col-lg-9">
-                                        <input type="text" name="naziv" id="naziv" class="form-control" placeholder="Naziv servisa" @if(isset($vrsta_senzora)) value="{{ $vrsta_senzora->naziv }}" @else value="{{ old('naziv') }}" @endif>
+                                        <input type="text" name="naziv" id="naziv" class="form-control" placeholder="Naziv vrste senzora" @if(isset($vrsta_senzora)) value="{{ $vrsta_senzora->naziv }}" @else value="{{ old('naziv') }}" @endif>
                                         <label id="naziv_error" for="naziv" class="validation-error-label" style="display: none;">Obavezno polje!</label>
                                         @if($errors->has('naziv') && $errors->any())
                                             <label id="naziv_error_2" for="naziv_error_2" class="validation-error-label" style="display: block;">Obavezno polje!</label>

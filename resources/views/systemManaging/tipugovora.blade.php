@@ -83,7 +83,11 @@
                     <div class="panel-heading">
                         <div class="row">
                             <div class="col-md-10 col-md-offset-1">
-                                <h5 class="panel-title">Dodaj novi tip ugovora</h5>
+                                @if(isset($tip_tehnologije))
+                                    <h5 class="panel-title">Izmeni tip ugovora</h5>
+                                @else
+                                    <h5 class="panel-title">Dodaj novi tip ugovora</h5>
+                                @endif
                             </div>
                         </div>
                     </div>

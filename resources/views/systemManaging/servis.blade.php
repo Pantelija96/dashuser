@@ -74,7 +74,7 @@
                 </table>
             </div>
 
-            <form class="form-horizontal" @if(isset($servis))  action="{{ route('editServisa') }}" @else  action="{{ route('insertServisa') }}" @endif method="POST" id="form_tehnologija">
+            <form class="form-horizontal" @if(isset($servis))  action="{{ route('editServisa') }}" @else  action="{{ route('insertServisa') }}" @endif method="POST" id="form_naziv_servisa">
                 {{ csrf_field() }}
                 @if(isset($servis))
                     <input type="hidden" name="id_naziv_servisa" id="id_naziv_servisa" value="{{ $servis->id }}" />

@@ -83,7 +83,11 @@
                     <div class="panel-heading">
                         <div class="row">
                             <div class="col-md-10 col-md-offset-1">
-                                <h5 class="panel-title">Dodaj novi tip ugovora</h5>
+                                @if(isset($tip_tehnologije))
+                                    <h5 class="panel-title">Izmeni tip tehnologije</h5>
+                                @else
+                                    <h5 class="panel-title">Dodaj novi tip tehnologije</h5>
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -95,7 +99,7 @@
                                 <div class="form-group">
                                     <label class="col-lg-3 control-label" for="naziv">Naziv:</label>
                                     <div class="col-lg-9">
-                                        <input type="text" name="naziv" id="naziv" class="form-control" placeholder="Naziv tipa ugovora" @if(isset($tip_tehnologije)) value="{{ $tip_tehnologije->naziv }}" @else value="{{ old('naziv') }}" @endif>
+                                        <input type="text" name="naziv" id="naziv" class="form-control" placeholder="Naziv tipa tehnologije" @if(isset($tip_tehnologije)) value="{{ $tip_tehnologije->naziv }}" @else value="{{ old('naziv') }}" @endif>
                                         <label id="naziv_error" for="naziv" class="validation-error-label" style="display: none;">Obavezno polje!</label>
                                         @if($errors->has('naziv') && $errors->any())
                                             <label id="naziv_error_2" for="naziv_error_2" class="validation-error-label" style="display: block;">Obavezno polje!</label>

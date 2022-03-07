@@ -74,7 +74,7 @@
                 </table>
             </div>
 
-            <form class="form-horizontal" @if(isset($tip_servisa))  action="{{ route('editTipServisa') }}" @else  action="{{ route('insertTipServisa') }}" @endif method="POST" id="form_tip_ugovora">
+            <form class="form-horizontal" @if(isset($tip_servisa))  action="{{ route('editTipServisa') }}" @else  action="{{ route('insertTipServisa') }}" @endif method="POST" id="form_tip_servisa">
                 {{ csrf_field() }}
                 @if(isset($tip_servisa))
                     <input type="hidden" name="id_tip_servisa" id="id_tip_servisa" value="{{ $tip_servisa->id }}" />
@@ -83,7 +83,11 @@
                     <div class="panel-heading">
                         <div class="row">
                             <div class="col-md-10 col-md-offset-1">
-                                <h5 class="panel-title">Dodaj novi tip ugovora</h5>
+                                @if(isset($tip_tehnologije))
+                                    <h5 class="panel-title">Izmeni tip servisa</h5>
+                                @else
+                                    <h5 class="panel-title">Dodaj novi tip servisa</h5>
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -95,7 +99,7 @@
                                 <div class="form-group">
                                     <label class="col-lg-3 control-label" for="naziv">Naziv:</label>
                                     <div class="col-lg-9">
-                                        <input type="text" name="naziv" id="naziv" class="form-control" placeholder="Naziv tipa ugovora" @if(isset($tip_servisa)) value="{{ $tip_servisa->naziv }}" @else value="{{ old('naziv') }}" @endif>
+                                        <input type="text" name="naziv" id="naziv" class="form-control" placeholder="Naziv tip servisa" @if(isset($tip_servisa)) value="{{ $tip_servisa->naziv }}" @else value="{{ old('naziv') }}" @endif>
                                         <label id="naziv_error" for="naziv" class="validation-error-label" style="display: none;">Obavezno polje!</label>
                                         @if($errors->has('naziv') && $errors->any())
                                             <label id="naziv_error_2" for="naziv_error_2" class="validation-error-label" style="display: block;">Obavezno polje!</label>

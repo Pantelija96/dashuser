@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\UserResource;
 use App\Models\LokacijaApp;
 use App\Models\NazivServisa;
 use App\Models\Partner;
@@ -23,12 +24,12 @@ class FrontendController extends Controller
         $this->data = [];
 
         $this->data['homeType'] = $homeType == null ? 1 : $homeType;
-        $this->data['nazivi_servisa'] = NazivServisa::all();
-        $this->data['tipovi_ugovora'] = TipUgovora::all();
-        $this->data['partneri'] = Partner::all();
-        $this->data['tipovi_servisa'] = TipServisa::all();
-        $this->data['tipovi_tehnologije'] = Tehnologije::all();
-        $this->data['sviUgovori'] = Ugovor::all();
+        $this->data['nazivi_servisa'] = NazivServisa::wherePrikazi(true)->get();
+        $this->data['tipovi_ugovora'] = TipUgovora::wherePrikazi(true)->get();
+        $this->data['partneri'] = Partner::wherePrikazi(true)->get();
+        $this->data['tipovi_servisa'] = TipServisa::wherePrikazi(true)->get();
+        $this->data['tipovi_tehnologije'] = Tehnologije::wherePrikazi(true)->get();
+        $this->data['sviUgovori'] = Ugovor::whereDekativiran(false)->get();
     }
 
 
@@ -100,6 +101,14 @@ class FrontendController extends Controller
         $this->data['vrste_senzora'] = VrstaSenzora::all();
         $this->data['stavke_fakture'] = StavkaFakture::all();
         return view('pages.addNewContract', $this->data);
+    }
+    public function addNewUser($id = null){
+        if($id){
+            $this->data['korisnik'] = UserResource::make(User::whereId($id)->first())->resolve();
+        }
+        $this->data['korisnici'] = UserResource::collection(User::whereDeaktiviran(false)->get())->resolve();
+        //return dd($this->data);
+        return view('admin.addnewuser', $this->data);
     }
 
     public function dodajStavkuFakture($id = null){

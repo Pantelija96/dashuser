@@ -18,7 +18,7 @@ function proveraUnosa(){
 
     if(!postoji_geska){
         //poslati formu
-        $("#form_tehnologija").submit();
+        $("#form_partner").submit();
     }
 }
 

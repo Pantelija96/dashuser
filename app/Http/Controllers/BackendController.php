@@ -12,10 +12,12 @@ use App\Models\StavkaFakture;
 use App\Models\Tehnologije;
 use App\Models\TipServisa;
 use App\Models\TipUgovora;
+use App\Models\User;
 use App\Models\VrstaSenzora;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use Symfony\Component\HttpFoundation\Response;
@@ -45,6 +47,88 @@ class BackendController extends Controller
         return dd($request->all());
     }
 
+    public function addNewUser(Request $request){
+        $request->validate([
+            'ime' => 'required',
+            'prezime' => 'required',
+            'email' => 'required|email',
+            'uloga' => 'required',
+            'lozinka' => 'required',
+            'lozinka_ponovo' => 'required'
+        ]);
+
+        try{
+            $result = DB::table('users')
+                ->insert([
+                    'ime' => $request->input('ime'),
+                    'prezime' => $request->input('prezime'),
+                    'email' => $request->input('email'),
+                    'password' => Hash::make($request->input('lozinka')),
+                    'id_uloga' => $request->get('uloga'),
+                    'lastLogin' => date('Y-m-d H:i:s'),
+                    'deaktiviran' => false
+                ]);
+        }
+        catch (\Exception $exception){
+            Log::error("Greska pri dodavanju korisnika id greske: korisnik-insert-1 => ".$exception->getMessage());
+            return redirect()->back()->with(['greska' => "Greska pri dodavanju korisnika id greske: korisnik-insert-1."]);
+        }
+        if($result){
+            return redirect('/addnewuser');
+        }
+        else{
+            Log::error("Greska pri dodavanju korisnika id greske: korisnik-edit-1 => ");
+            return redirect()->back()->with(['greska' => "Greska pri dodavanju korisnika id greske: korisnik-insert-1."]);
+        }
+    }
+    public function editUser(Request $request){
+        $request->validate([
+            'id_korisnik' => 'required',
+            'ime' => 'required',
+            'prezime' => 'required',
+            'email' => 'required|email',
+            'uloga' => 'required'
+        ]);
+
+        try{
+            $result = DB::table('users')->where('id','=',$request->input('id_korisnik'))
+                ->update([
+                    'ime' => $request->input('ime'),
+                    'prezime' => $request->input('prezime'),
+                    'email' => $request->input('email'),
+                    'id_uloga' => $request->input('uloga')
+                ]);
+        }
+        catch (\Exception $exception){
+            Log::error("Greska pri editu korisnika id greske: korisnik-edit-1 => ".$exception->getMessage());
+            return redirect()->back()->with(['greska' => "Greska pri editu korisnika id greske: korisnik-edit-1."]);
+        }
+        if($result){
+            return redirect('/addnewuser');
+        }
+        else{
+            Log::error("Greska pri editu korisnika id greske: korisnik-edit-1 => ");
+            return redirect()->back()->with(['greska' => "Greska pri editu korisnika id greske: korisnik-edit-1."]);
+        }
+    }
+    public function deleteUser($id){
+        try{
+            $deleteResult = User::where('id', $id)->update([
+                'deaktiviran' => true
+            ]);
+        }
+        catch (\Exception $exception){
+            Log::error("Greska pri brisanju korisnika delete-korisnik-1 => ".$exception->getMessage());
+            return response("Desila se greska! Id greske : delete-korisnik-1", Response::HTTP_BAD_REQUEST);
+        }
+        if($deleteResult){
+            return response('',Response::HTTP_OK);
+        }
+        else{
+            Log::error("Greska pri brisanju korisnika insert-korisnik-1".var_dump($deleteResult));
+            return response("Desila se greska! Id greske : delete-korisnik-1", Response::HTTP_BAD_REQUEST);
+        }
+    }
 
     public function insert($text, $model, $naziv, $prikazi, $idGreske){
         try {
