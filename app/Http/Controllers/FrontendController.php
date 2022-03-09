@@ -97,9 +97,9 @@ class FrontendController extends Controller
 
     public function addNewContract(){
         $this->homePageData(null);
-        $this->data['lokacije_app'] = LokacijaApp::all();
-        $this->data['vrste_senzora'] = VrstaSenzora::all();
-        $this->data['stavke_fakture'] = StavkaFakture::all();
+        $this->data['lokacije_app'] = LokacijaApp::wherePrikazi(true)->get();
+        $this->data['vrste_senzora'] = VrstaSenzora::wherePrikazi(true)->get();
+        $this->data['stavke_fakture'] = StavkaFakture::wherePrikazi(true)->get();
         return view('pages.addNewContract', $this->data);
     }
     public function addNewUser($id = null){

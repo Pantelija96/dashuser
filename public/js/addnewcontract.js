@@ -6,7 +6,7 @@ var proveraIp = false;
 var posetaDrugojStrani = false;
 
 const firstStepIDs = [
-    'id_korisnik',
+    'id_kupac',
     'connectivity_plan',
     'naziv_kupac',
     'pib',
@@ -121,10 +121,12 @@ function secondStepVerification(){
         var naknada = $("#naknada_"+(aktivneStavke[i])).val();
         var status = $("#status_"+(aktivneStavke[i])).val();
 
+        console.log(naknada);
+
         var row_errors = [];
 
         if(id_stavka === "") row_errors.push('stavka_fakture_'+aktivneStavke[i]+ "_error");
-        if(naknada === "") row_errors.push('naknada_'+aktivneStavke[i]+ "_error");
+        if(naknada === "" || parseFloat(naknada) === 0) row_errors.push('naknada_'+aktivneStavke[i]+ "_error");
         if(status === "") row_errors.push('status_'+aktivneStavke[i]+ "_error");
 
         if(datum_pocetak === ""){
@@ -161,7 +163,7 @@ function secondStepVerification(){
     return rows_with_errors.length === 0;
 }
 function dohvatiKorisnika(){
-    var idKorisnika = $("#idKorisnika").val();
+    var idKorisnika = $("#id_kupac").val();
     if(idKorisnika === ""){
         new PNotify({
             title: 'Greška!',
@@ -522,7 +524,7 @@ function stavkaChanged(row_id){
     });
 }
 function getSoapUser(){
-    var id_korisnik = $("#id_korisnik").val();
+    var id_korisnik = $("#id_kupac").val();
     if(id_korisnik === ""){
         new PNotify({
             title: 'Greška!',
@@ -654,7 +656,7 @@ $(document).ready(function() {
     $('.pickadate-selectors').pickadate(pickDateOptions);
 
     //Podesavanje pritiska na enter
-    document.getElementById("id_korisnik").addEventListener("keydown", function(event) {
+    document.getElementById("id_kupac").addEventListener("keydown", function(event) {
         if (event.key === "Enter") {
             getSoapUser();
         }
@@ -665,6 +667,9 @@ $(document).ready(function() {
         radioClass: 'choice',
         wrapperClass: 'border-danger-600 text-danger-800'
     });
+
+    //inicijalno podesavanje aktivnih stavki
+    $("#aktivne_stavke").val(aktivneStavke);
 })
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -856,15 +861,6 @@ function izbranaStavkaFakture(idReda){
         }
     }
 }*/
-
-
-
-
-
-
-
-
-
 
 
 

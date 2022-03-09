@@ -58,8 +58,8 @@
                         <div class="form-group row">
                             <label class="col-lg-2 control-label" for="idKorisnika">Id korisnika:</label>
                             <div class="col-lg-3">
-                                <input type="text" class="form-control" placeholder="Id korisnika" name="id_korisnik" id="id_korisnik">
-                                <label id="id_korisnik_error" for="id_korisnik" class="validation-error-label" style="display: none;">Obavezno polje!</label>
+                                <input type="text" class="form-control" placeholder="Id korisnika" name="id_kupac" id="id_kupac">
+                                <label id="id_kupac_error" for="id_kupac" class="validation-error-label" style="display: none;">Obavezno polje!</label>
                             </div>
                             <div class="col-lg-2">
                                 <button type="button" class="btn bg-telekom-slova" onclick="getSoapUser()" >Preuzmi podatke <i class="icon-download4 position-right"></i></button>
@@ -493,5 +493,22 @@
             <button type="submit" class="btn bg-telekom-slova stepy-finish">Sačuvaj <i class="icon-check position-right"></i></button>
         </form>
     </div>
-
+    @empty(!session('greska'))
+        <script>
+            $( document ).ready(function() {
+                new PNotify({
+                    title: 'Greška!',
+                    text: '{{ session('greska') }}',
+                    addclass: 'bg-telekom-slova',
+                    hide: false,
+                    buttons: {
+                        sticker: false
+                    }
+                });
+            });
+        </script>
+        @php
+            Illuminate\Support\Facades\Session::forget('greska');
+        @endphp
+    @endempty
 @endsection
