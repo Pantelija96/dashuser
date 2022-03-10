@@ -91,8 +91,6 @@
 
                             @yield('edictcontract')
 
-
-
                             @if(\Illuminate\Support\Facades\Auth::user()->getUloga->id == 1 || \Illuminate\Support\Facades\Auth::user()->getUloga->id == 2)
                                 <li class="navigation-header"><span>Administrator podrske</span> <i class="icon-menu" title="Main pages"></i></li>
                                 <li @yield('systemmanaging') >

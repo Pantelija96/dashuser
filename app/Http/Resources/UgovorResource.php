@@ -22,7 +22,10 @@ class UgovorResource extends JsonResource
             'naziv_servisa' => $this->getNazivServisa,
             'lokacija_app' => $this->getLokacijaApp,
             'connectivity_plan' => $this->connectivity_plan,
-            'ip_adresa' => $this->ip_adresa
+            'ip_adresa' => $this->ip_adresa,
+            'naziv_servera' => $this->naziv_servera,
+            'naziv_ugovora' => $this->naziv_ugovora,
+            'broj_ugovora' => $this->broj_ugovora
         ];
     }
 }

@@ -57,5 +57,12 @@ class KomercijalniUslovi extends Model
 
     protected $guarded = ['id'];
 
+    public function getStavkaFakture(){
+        return $this->belongsTo(StavkaFakture::class, 'id_stavka_fakture');
+    }
+
+    public function getVrstaSenzora(){
+        return $this->belongsTo(VrstaSenzora::class, 'id_vrsta_senzora');
+    }
 
 }

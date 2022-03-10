@@ -26,6 +26,8 @@ Route::group(['middleware' => ['auth:web']], function (){
 
     Route::get('/addnew',[FrontendController::class, 'addNewContract']);
     Route::post('/addnewcontract', [BackendController::class, 'addNewContract'])->name('addNewContract');
+    Route::get('/editcontract/{id}', [FrontendController::class, 'editContract']);
+    Route::post('/editcontract', [BackendController::class, 'editContract'])->name('editCotract');
 
     Route::get('/addnewuser/{id?}', [FrontendController::class, 'addNewUser']);
     Route::post('/addnewuser', [BackendController::class, 'addNewUser'])->name('addNewUser');
@@ -46,6 +48,8 @@ Route::group(['middleware' => ['auth:web']], function (){
             Route::get('/nazivservisa/{id}', [BackendController::class, 'deleteServis']);
             Route::get('/vrstasenzora/{id}', [BackendController::class, 'deleteVrstuSenzora']);
             Route::get('/lokacijaapp/{id}', [BackendController::class, 'deleteLokacijuApp']);
+            Route::get('/komercijalniuslov/{id}', [BackendController::class, 'deleteKomUslov']);
+            Route::get('/dekativirajugovor/{id}', [BackendController::class, 'deaktivirajUgovor']);
         });
     });
 

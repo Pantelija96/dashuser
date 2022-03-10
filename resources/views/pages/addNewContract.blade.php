@@ -421,7 +421,7 @@
                             </div>
 
                             <div class="col-md-1 form-group" style="margin-left: 5px;">
-                                <input type="text" name="datum_kraj_1" id="datum_kraj_1" class="form-control pickadate-selectors" placeholder="Datum početak">
+                                <input type="text" name="datum_kraj_1" id="datum_kraj_1" class="form-control pickadate-selectors" placeholder="Datum kraj">
                             </div>
 
                             <div class="col-md-2 form-group" style="margin-left: 5px;">
@@ -474,7 +474,7 @@
                             </div>
 
                             <div class="col-md-1 form-group" style="margin-left: 5px; ">
-                                <label id="datum_kraj_1_error" for="datum_kraj_1" class="validation-error-label" style="display: none;">Mora biti prvi dan u mesecu!</label>
+                                <label id="datum_kraj_1_error" for="datum_kraj_1" class="validation-error-label" style="display: none;">Mora biti poslednji dan u mesecu!</label>
                             </div>
 
                             <div class="col-md-2 form-group" style="margin-left: 5px; ">

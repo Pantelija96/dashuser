@@ -6195,3 +6195,7 @@ h6.panel-title,
     text-align: center;
     padding: 3px;
 }
+
+.picker__holder{
+    min-width: 250px;
+}

@@ -2,20 +2,26 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\KomercijalniUslovResource;
 use App\Http\Resources\UserResource;
+use App\Models\KomercijalniUslovi;
 use App\Models\LokacijaApp;
 use App\Models\NazivServisa;
 use App\Models\Partner;
+use App\Models\PartnerUgovor;
 use App\Models\StavkaFakture;
 use App\Models\Tehnologije;
+use App\Models\TehnologijeUgovor;
 use App\Models\TipServisa;
 use App\Models\TipUgovora;
 use App\Models\Ugovor;
 use App\Models\User;
 use App\Models\VrstaSenzora;
+use App\Models\VrstaSenzoraUgovor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use phpDocumentor\Reflection\Utils;
 
 class FrontendController extends Controller
 {
@@ -32,16 +38,13 @@ class FrontendController extends Controller
         $this->data['sviUgovori'] = Ugovor::whereDekativiran(false)->get();
     }
 
-
     public function loginPage(){
         return view('pages.login');
     }
-
     public function home($homeType = null){
         $this->homePageData($homeType);
         return view('pages.home', $this->data);
     }
-
     public function search(Request $request, $homeTypeVar = null){
         $homeType = intval($homeTypeVar == null ? $request->input('view') : $homeTypeVar);
         $this->homePageData($homeType);
@@ -94,7 +97,36 @@ class FrontendController extends Controller
 
         return view('pages.search', $this->data);
     }
+    public function editContract($id){
+        $this->homePageData(null);
+        $this->data['lokacije_app'] = LokacijaApp::wherePrikazi(true)->get();
+        $this->data['vrste_senzora'] = VrstaSenzora::wherePrikazi(true)->get();
+        $this->data['stavke_fakture'] = StavkaFakture::wherePrikazi(true)->get();
+        $this->data['ugovor'] = Ugovor::whereId($id)->first();
 
+        $this->data['partneri_ugovora'] = [];
+        $partneri = PartnerUgovor::whereIdUgovor($id)->get();
+        foreach ($partneri as $par){
+            array_push($this->data['partneri_ugovora'], $par->id_partner);
+        }
+
+        $this->data['tehnologije_ugovora'] = [];
+        $tehnologije = TehnologijeUgovor::whereIdUgovor($id)->get();
+        foreach ($tehnologije as $teh){
+            array_push($this->data['tehnologije_ugovora'], $teh->id_tehnologije);
+        }
+
+        $this->data['vrste_senzora_ugovor'] = [];
+        $senzori = VrstaSenzoraUgovor::whereIdUgovor($id)->get();
+        foreach ($senzori as $sen){
+            array_push($this->data['vrste_senzora_ugovor'], $sen->id_vrsta_senzora);
+        }
+
+        $this->data['komercijalni_uslovi'] = KomercijalniUslovResource::collection(KomercijalniUslovi::whereIdUgovor($id)->where('obrisana',false)->get())->resolve();
+
+        //return dd($this->data['komercijalni_uslovi'][0]['stavka_fakture']->naziv);
+        return view('pages.editContract', $this->data);
+    }
     public function addNewContract(){
         $this->homePageData(null);
         $this->data['lokacije_app'] = LokacijaApp::wherePrikazi(true)->get();

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\EditRequest;
 use App\Http\Requests\InsertRequest;
 use App\Http\Requests\LoginRequest;
+use App\Models\KomercijalniUslovi;
 use App\Models\LokacijaApp;
 use App\Models\NazivServisa;
 use App\Models\Partner;
@@ -12,6 +13,7 @@ use App\Models\StavkaFakture;
 use App\Models\Tehnologije;
 use App\Models\TipServisa;
 use App\Models\TipUgovora;
+use App\Models\Ugovor;
 use App\Models\User;
 use App\Models\VrstaSenzora;
 use Illuminate\Http\Request;
@@ -43,6 +45,7 @@ class BackendController extends Controller
         Session::flush();
         return redirect('/');
     }
+
     public function addNewContract(Request $request){
         //return dd($request->all());
         $request->validate([
@@ -184,6 +187,99 @@ class BackendController extends Controller
             return redirect()->back()->with(['greska' => "Desila se greska! Id greske : insert-ugovor-1"]);
         }
 
+    }
+    public function editContract(Request $request){
+        //return dd($request->all());
+        //postoji vec ugovor, ne dodaje se novi samo komercijalni uslovi
+        if($request->input('aktivne_stavke') != null){
+            //ima bar jedan komercijalni uslov
+            $stavke = explode(",", $request->input('aktivne_stavke'));
+            $id_ugovor = intval($request->input('id_ugovor'));
+            foreach ($stavke as $stavka){
+                if($request->input('id_komercijalni_uslov_'.$stavka) !== null){
+                    //radi se update komercijalnog uslova
+                    try {
+                        $id_kom_uslov = intval($request->input('id_komercijalni_uslov_'.$stavka));
+                        DB::table('komercijalni_uslovi')
+                            ->where('id', '=', $id_kom_uslov)
+                            ->update([
+                                'datum_kraj' => date('Y-m-d', strtotime($request->input("datum_kraj_" . $stavka . "_data")))
+                            ]);
+                    }
+                    catch (\Exception $exception){
+                        Log::error("Greska pri editu postojecih komercijalnih uslova edit-ugovor-1 => ".$exception->getMessage());
+                        return redirect()->back()->with(['greska' => "Desila se greska! Id greske : edit-ugovor-1"]);
+                    }
+                }
+                else{
+                    //radi se insert novog kom uslova
+                    try{
+                        $vrsta_senzora = intval(explode('|',$request->input('stavka_fakture_'.$stavka))[0]);
+                        DB::table('komercijalni_uslovi')
+                            ->insert([
+                                'id_user' => Auth::user()->id,
+                                'id_ugovor' => $id_ugovor,
+                                'id_vrsta_senzora' => $vrsta_senzora == 0 ? null : $vrsta_senzora,
+                                'id_stavka_fakture' => intval(explode('|',$request->input('stavka_fakture_'.$stavka))[1]),
+                                'datum_pocetak' => date('Y-m-d', strtotime($request->input('datum_pocetak_'.$stavka.'_data'))),
+                                'datum_kraj' => date('Y-m-d', strtotime($request->input('datum_kraj_'.$stavka.'_data'))),
+                                'naknada' => floatval($request->input('naknada_'.$stavka)),
+                                'status' => $request->input('status_').$stavka,
+                                'min' => intval($request->input('min_'.$stavka)),
+                                'max' => intval($request->input('max_'.$stavka)),
+                                'obrisana' => false,
+                                'uredjaj' => $request->input('uredjaj_' . $stavka) !== null,
+                                'sim_kartica' => $request->input('sim_'.$stavka) !== null,
+                                'id_user_obrisao' => 0
+                            ]);
+                    }
+                    catch (\Exception $exception){
+                        Log::error("Greska pri dodavanju novih komercijalnih uslova za posotjeci ugovor edit-ugovor-2 => ".$exception->getMessage());
+                        return redirect()->back()->with(['greska' => "Desila se greska! Id greske : edit-ugovor-2"]);
+                    }
+                }
+            }
+            return redirect('/home');
+        }
+        return redirect()->back();
+    }
+    public function deleteKomUslov($id){
+        try{
+            $deleteResult = KomercijalniUslovi::where('id', $id)->update([
+                'obrisana' => true,
+                'datum_brisanja' => date("Y-m-d H:i:s"),
+                'id_user_obrisao' => Auth::user()->id
+            ]);
+        }
+        catch (\Exception $exception){
+            Log::error("Greska pri brisanju komercijalnog uslova, greska: delete-kom-uslov-1 => ".$exception->getMessage());
+            return response("Desila se greska! Id greske : delete-kom-uslov-1", Response::HTTP_BAD_REQUEST);
+        }
+        if($deleteResult){
+            return response('',Response::HTTP_OK);
+        }
+        else{
+            Log::error("Greska pri brisanju komercijalnog uslova, greska: delete-kom-uslov-1 => ".var_dump($deleteResult));
+            return response("Desila se greska! Id greske : delete-kom-uslov-1", Response::HTTP_BAD_REQUEST);
+        }
+    }
+    public function deaktivirajUgovor($id){
+        try{
+            $deleteResult = Ugovor::where('id', $id)->update([
+                'dekativiran' => true
+            ]);
+        }
+        catch (\Exception $exception){
+            Log::error("Greska pri deaktivaciji ugovora delete-ugovor-1 => ".$exception->getMessage());
+            return response("Desila se greska! Id greske : delete-ugovor-1", Response::HTTP_BAD_REQUEST);
+        }
+        if($deleteResult){
+            return redirect('/home');
+        }
+        else{
+            Log::error("Greska pri deaktivaciji ugovora delete-ugovor-2".var_dump($deleteResult));
+            return response("Desila se greska! Id greske : delete-ugovor-2", Response::HTTP_BAD_REQUEST);
+        }
     }
 
     public function addNewUser(Request $request){
