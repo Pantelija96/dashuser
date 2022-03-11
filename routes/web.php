@@ -19,6 +19,8 @@ Route::get('/', [FrontendController::class, 'loginPage']);
 Route::post('/login', [BackendController::class, 'login'])->name('login');
 Route::get('/logout',[BackendController::class, 'logout'])->name('logout');
 
+ROute::get('/soaptest', [BackendController::class, 'soapTest']);
+
 
 Route::group(['middleware' => ['auth:web']], function (){
     Route::get('/home/{homeType?}', [FrontendController::class, 'home']);

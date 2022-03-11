@@ -94,7 +94,7 @@
                             @if(\Illuminate\Support\Facades\Auth::user()->getUloga->id == 1 || \Illuminate\Support\Facades\Auth::user()->getUloga->id == 2)
                                 <li class="navigation-header"><span>Administrator podrske</span> <i class="icon-menu" title="Main pages"></i></li>
                                 <li @yield('systemmanaging') >
-                                    <a href="#"><i class="icon-stack2"></i> <span>Menadzment sistema</span></a>
+                                    <a href="#"><i class="icon-gear"></i> <span>Menadzment sistema</span></a>
                                     <ul>
                                         <li @yield('stavkafakture')><a href="{{ url('/menage/stavkafakture') }}">Stavka fakture</a></li>
                                         <li @yield('tipugovora')><a href="{{ url('/menage/tipugovora') }}">Tip ugovora</a></li>

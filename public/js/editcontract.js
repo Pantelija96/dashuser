@@ -12,7 +12,6 @@ var pickDateOptions = {
     editable: true
 };
 var stavkeFakture = [];
-
 var menjanDatum = false;
 
 function postaviStavkeFakture(){

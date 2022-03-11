@@ -22,6 +22,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
+use SoapClient;
 use Symfony\Component\HttpFoundation\Response;
 
 class BackendController extends Controller
@@ -575,5 +576,11 @@ class BackendController extends Controller
             'kam' => 'kam',
             'segm' => 'seg'
         ];
+    }
+
+    public function soapTest(){
+        //$soapclient = new SoapClient('https://www.w3schools.com/xml/tempconvert.asmx?WSDL');
+
+        return dd(phpinfo());
     }
 }
