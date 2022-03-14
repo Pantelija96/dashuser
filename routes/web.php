@@ -19,7 +19,8 @@ Route::get('/', [FrontendController::class, 'loginPage']);
 Route::post('/login', [BackendController::class, 'login'])->name('login');
 Route::get('/logout',[BackendController::class, 'logout'])->name('logout');
 
-ROute::get('/soaptest', [BackendController::class, 'soapTest']);
+Route::get('/soaptest', [BackendController::class, 'soapTest']);
+Route::get('/exporttest', [BackendController::class, 'exportExcel']);
 
 
 Route::group(['middleware' => ['auth:web']], function (){
@@ -34,6 +35,8 @@ Route::group(['middleware' => ['auth:web']], function (){
     Route::get('/addnewuser/{id?}', [FrontendController::class, 'addNewUser']);
     Route::post('/addnewuser', [BackendController::class, 'addNewUser'])->name('addNewUser');
     Route::post('edituser', [BackendController::class, 'editUser'])->name('editUser');
+
+    Route::get('/export/{searchobj?}', [BackendController::class, 'exportExcel']);
 
 
     Route::prefix('/ajax')->group(function (){

@@ -549,27 +549,17 @@ function getSoapUser(){
             url: baseUrl+'ajax/getuser/'+id_korisnik,
             success: function(data) {
                 console.log(data);
-                $("#naziv_kupac").val("naziv kupca "+data.id).prop("readonly", true);
+                $("#naziv_kupac").val(data.name).prop("readonly", true);
                 $("#mb").val(data.mbr).prop("readonly", true);
                 $("#pib").val(data.pib).prop("readonly", true);
                 $("#telefon").val(data.telefon).prop("readonly", true);
                 $("#email").val(data.email).prop("readonly", true);
-                $("#segment").val(data.email).prop("readonly", true);
+                $("#segment").val(data.segm).prop("readonly", true);
                 $("#kam").val(data.kam).prop("readonly", true);
 
-                var zbirni_racuni_test = [
-                    {
-                        id: "zbr1",
-                        text: "zbr1",
-                    },
-                    {
-                        id: "zbr2",
-                        text: "zbr2"
-                    }
-                ];
                 $("#zbirni_racun").select2({
                     minimumResultsForSearch: Infinity,
-                    data: zbirni_racuni_test
+                    data: data.racuni
                 });
             },
             error: function (xhr, status, error){

@@ -89,6 +89,6 @@ class Ugovor extends Model
     }
 
     public function getLokacijaApp(){
-        return $this->belongsTo(LokacijaApp::class,'id_lokaicja_app');
+        return $this->belongsTo(LokacijaApp::class,'id_lokacija_app');
     }
 }

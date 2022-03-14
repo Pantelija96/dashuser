@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\UgovorExport;
 use App\Http\Requests\EditRequest;
 use App\Http\Requests\InsertRequest;
 use App\Http\Requests\LoginRequest;
+use App\Http\Resources\UgovorExportResource;
 use App\Models\KomercijalniUslovi;
 use App\Models\LokacijaApp;
 use App\Models\NazivServisa;
@@ -22,6 +24,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
+use Maatwebsite\Excel\Facades\Excel;
 use SoapClient;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -574,13 +577,65 @@ class BackendController extends Controller
             'email' => 'ast@asd',
             'telefon' => '0123',
             'kam' => 'kam',
-            'segm' => 'seg'
+            'segm' => 'seg',
+            'racuni' => [
+                "zbirni rac 1",
+                "zbirni rac 2",
+                "zbirni rac 3"
+            ],
+            'name' => "name test"
         ];
-    }
 
+        $soapclient = new SoapClient('http://10.1.21.245:7810/services/GetAccountDetails?wsdl');
+        $params = array(
+            "CustomerId" => $id
+        );
+        //22563316
+        //2109697
+        $result = $soapclient->__soapCall("GetAccountDetails", array($params));
+        if(isset($result->Account)){
+            $obj = [
+                "id" => $id,
+                "pib" => $result->Account->AccountPIB,
+                "mbr" => $result->Account->AccountMB,
+                "telefon" => $result->Account->AccountMainPhoneNumber,
+                "kam" => $result->Account->AccountTeam,
+                "segm" => $result->Account->AccountSegment,
+                "name" => $result->Account->BusinessName
+            ];
+            if(isset($result->Account->MainEmailAddress)){
+                $obj["email"] = $result->Account->MainEmailAddress;
+            }
+            $racuni = [];
+
+            foreach ($result->Account->ListOfComInvoiceProfile->ComInvoiceProfile as $racun){
+                if($racun->BPProfileType !== "Fixed"){
+                    $racuni[] = $racun->BPCode;
+                }
+            }
+
+            $obj["racuni"] = $racuni;
+
+            return \response($obj, Response::HTTP_OK);
+        }
+
+        return \response(null, Response::HTTP_BAD_REQUEST);
+    }
     public function soapTest(){
         //$soapclient = new SoapClient('https://www.w3schools.com/xml/tempconvert.asmx?WSDL');
 
         return dd(phpinfo());
+    }
+
+    public function exportExcel($searchobj = null){
+
+        //return dd(UgovorExportResource::collection(Ugovor::all())->resolve());
+        return Excel::download(new UgovorExport, 'users.xlsx');
+        //if($searchobj == null){
+        //    //nema nista od pretrage, vracaju se svi podaci
+        //}
+        //else{
+
+        //}
     }
 }
