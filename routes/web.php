@@ -20,7 +20,6 @@ Route::post('/login', [BackendController::class, 'login'])->name('login');
 Route::get('/logout',[BackendController::class, 'logout'])->name('logout');
 
 Route::get('/soaptest', [BackendController::class, 'soapTest']);
-Route::get('/exporttest', [BackendController::class, 'exportExcel']);
 
 
 Route::group(['middleware' => ['auth:web']], function (){
@@ -37,6 +36,7 @@ Route::group(['middleware' => ['auth:web']], function (){
     Route::post('edituser', [BackendController::class, 'editUser'])->name('editUser');
 
     Route::get('/export/{searchobj?}', [BackendController::class, 'exportExcel']);
+    Route::get('/exporttest', [BackendController::class, 'exportExcel']);
 
 
     Route::prefix('/ajax')->group(function (){

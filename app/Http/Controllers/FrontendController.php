@@ -52,6 +52,7 @@ class FrontendController extends Controller
         $datum_pretraga = $request->input('datumPotpisa');
         $tehnologija_id = $request->input('tehnologija');
         $partner_id = $request->input('partner');
+        $naziv_servisa_id = $request->input('naziv_servisa');
 
         $ugovori = Ugovor::join('tehnologije_ugovor', 'tehnologije_ugovor.id_ugovor', '=', 'ugovor.id')
             ->join('partner_ugovor', 'partner_ugovor.id_ugovor', '=', 'ugovor.id')
@@ -72,6 +73,9 @@ class FrontendController extends Controller
             })
             ->when($partner_id, function ($query, $partner_id){
                 $query->where('id_partner', '=', $partner_id);
+            })
+            ->when($naziv_servisa_id, function ($query, $naziv_servisa_id){
+                $query->where('id_naziv_servisa', '=', $naziv_servisa_id);
             })
             ->get();
 
@@ -94,6 +98,25 @@ class FrontendController extends Controller
         $this->data['uo'] = $request->input('uo');
         $this->data['pib'] = $request->input('pib');
         $this->data['segment'] = $request->input('segment');
+
+        $this->data['search_obj'] = [
+            'pretraga' => $request->input('pretraga'),
+            'naziv_ugovora' => $request->input('naziv_ugovora'),
+            'naziv_servisa' => $request->input('naziv_servisa'),
+            'broj_ugovora' => $request->input('broj_ugovora'),
+            'naziv_kupac' => $request->input('naziv_kupac'),
+            'connectivity_plan' => $request->input('connectivity_plan'),
+            'tip_ugovora' => $request->input('tip_ugovora'),
+            'partner' => $request->input('partner'),
+            'datum_potpisa' => $request->input('datum_potpisa'),
+            'id_kupac' => $request->input('id_kupac'),
+            'kam' => $request->input('kam'),
+            'tip_servisa' => $request->input('tip_servisa'),
+            'tehnologija' => $request->input('tehnologija'),
+            'uo' => $request->input('uo'),
+            'pib' => $request->input('pib'),
+            'segment' => $request->input('segment')
+        ];
 
         return view('pages.search', $this->data);
     }

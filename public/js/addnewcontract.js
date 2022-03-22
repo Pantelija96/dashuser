@@ -661,8 +661,8 @@ $(document).ready(function() {
     //inicijalno podesavanje aktivnih stavki
     $("#aktivne_stavke").val(aktivneStavke);
 })
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /*function promenaLokacije(){
     var lokacija = $("#lokacijaAplikacije").val();
     if(parseInt(lokacija) === 2){
@@ -851,8 +851,6 @@ function izbranaStavkaFakture(idReda){
         }
     }
 }*/
-
-
 
 /*if(posetaDrugojStrani){
             var selected2 = $(this).select2('data');

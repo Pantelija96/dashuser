@@ -564,8 +564,6 @@ class BackendController extends Controller
         return $this->edit(LokacijaApp::class, $request->input('id_lokacija_aplikacije'), 1, 'lokacija aplikacije', $update_data, 'lokacijaapp');
     }
 
-
-
     public function getStavkaFakture($id){
         return StavkaFakture::whereId($id)->first();
     }
@@ -623,14 +621,18 @@ class BackendController extends Controller
     }
     public function soapTest(){
         //$soapclient = new SoapClient('https://www.w3schools.com/xml/tempconvert.asmx?WSDL');
+        //
+        //http://10.1.32.179/CloudWebService/CloudWebService?wsdl
 
         return dd(phpinfo());
     }
 
     public function exportExcel($searchobj = null){
 
+        //return dd($searchobj);
+
         //return dd(UgovorExportResource::collection(Ugovor::all())->resolve());
-        return Excel::download(new UgovorExport, 'users.xlsx');
+        return Excel::download(new UgovorExport($searchobj), 'users.xlsx');
         //if($searchobj == null){
         //    //nema nista od pretrage, vracaju se svi podaci
         //}

@@ -70,7 +70,7 @@
                     <div class="col-sm-6">
                         <ul class="list-inline list-inline-condensed no-margin-bottom">
                             <li><a href="#" onclick="showFilters()" class="btn telekom-tekst btn-sm"><i class="icon-filter3 position-left"></i> Prikazi filtere</a></li>
-                            <li><a href="{{ url('/downloadexcel') }}" class="btn telekom-tekst btn-sm"><i class="icon-file-excel position-left"></i> Izvezi u .xsl formatu</a></li>
+                            <li><a href="{{ url('/export') }}" class="btn telekom-tekst btn-sm"><i class="icon-file-excel position-left"></i> Izvezi u .xsl formatu</a></li>
                             <li><a href="{{ url('/addnew') }}" class="btn telekom-tekst btn-sm"><i class="icon-plus3 position-left"></i> Dodaj novi ugovor</a></li>
                         </ul>
                     </div>
